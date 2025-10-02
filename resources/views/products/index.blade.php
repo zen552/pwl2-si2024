@@ -43,12 +43,12 @@
                                         <td>{{ "Rp " . number_format($product->price,2,',','.') }}</td>
                                         <td>{{ $product->stock }}</td>
                                         <td class="text-center">
-                                            <form onsubmit="return confirm('Apakah Anda Yakin ?');" action="{{ route('products.destroy', $product->id) }}" method="POST">
+                                            <form onsubmit="return confirm('Apakah Anda yakin akan menghapus ' + namaProduk + '?');" action="{{ route('products.destroy', $product->id) }}" method="POST">
                                                 <a href="{{ route('products.show', $product->id) }}" class="btn btn-sm btn-dark">SHOW</a>
                                                 <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm btn-primary">EDIT</a>
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger">HAPUS</button>
+                                                <button type="button" class="btn btn-sm btn-danger" id="btn-delete" data-nama="{{ $product->title }}">HAPUS</button>
                                             </form>
                                         </td>
                                     </tr>
@@ -69,11 +69,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        //message with sweetalert
-        @if (session('successs'))
-                        Swal.fire({
+        // Notifikasi SweetAlert dari session
+        @if (session('success'))
+            Swal.fire({
                 icon: "success",
-                title: "berhasil",
+                title: "Berhasil",
                 text: "{{ session('success') }}",
                 showConfirmButton: false,
                 timer: 2000
@@ -81,13 +81,36 @@
         @elseif(session('error'))
             Swal.fire({
                 icon: "error",
-                title: "GAGAL !",
+                title: "GAGAL!",
                 text: "{{ session('error') }}",
                 showConfirmButton: false,
                 timer: 2000
-            })
+            });
         @endif
 
+        // Konfirmasi hapus data dengan SweetAlert
+        document.querySelectorAll('#btn-delete').forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
+                let form = this.closest('form');
+                let namaProduk = this.getAttribute('data-nama'); // ambil nama produk
+
+                Swal.fire({
+                    title: 'Apakah Anda yakin akan menghapus ' + namaProduk + '?',
+                    text: "Data produk akan dihapus permanen!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
     </script>
     
 </body>
