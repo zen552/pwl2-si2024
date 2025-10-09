@@ -1,11 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+<<<<<<< HEAD
 use App\Http\Controllers\TransaksiController;
+=======
+use App\Http\Controllers\SupplierController;
+>>>>>>> origin/Gilberth
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::resource('suppliers', SupplierController::class);
+Route::resource('categories', CategoryController::class);
+Route::resource('transactions', TransactionController::class);
+
 
 //route resource for products
 Route::resource('/products', \App\Http\Controllers\ProductController::class);
