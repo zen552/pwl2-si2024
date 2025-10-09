@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 
 use App\Models\Category_product;
+use App\Models\ProductCategory;
 use App\Models\Supplier;
 //import return type View
 use Illuminate\View\View;
@@ -42,7 +43,7 @@ class ProductController extends Controller
      */
     public function create(): View
     {
-    $categories = Category_product::all();  // Ambil semua kategori
+    $categories = ProductCategory::all();  // Ambil semua kategori
     $suppliers  = Supplier::all();          // Ambil semua supplier
 
     return view('products.create', compact('categories', 'suppliers'));
@@ -108,7 +109,7 @@ class ProductController extends Controller
     public function edit(string $id): View
 {
     $product = Product::findOrFail($id);           // Ambil product
-    $categories = Category_product::all();         // Ambil semua kategori
+    $categories = ProductCategory::all();         // Ambil semua kategori
     $suppliers  = Supplier::all();                 // Ambil semua supplier
 
     return view('products.edit', compact('product', 'categories', 'suppliers'));
