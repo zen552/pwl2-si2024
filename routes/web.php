@@ -1,11 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-<<<<<<< HEAD
 use App\Http\Controllers\TransaksiController;
-=======
 use App\Http\Controllers\SupplierController;
->>>>>>> origin/Gilberth
+
 
 Route::get('/', function () {
     return view('welcome');
