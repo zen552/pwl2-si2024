@@ -36,7 +36,7 @@ class TransaksiPenjualanController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi input
+        // Validasi input (sudah baik)
         $request->validate([
             'nama_kasir' => 'required|string|max:50',
             'email_pembeli' => 'nullable|email',
@@ -45,35 +45,63 @@ class TransaksiPenjualanController extends Controller
             'products.*.jumlah' => 'required|integer|min:1',
         ]);
 
-        try {
-            DB::beginTransaction();
+        // =================================================================
+        // 1. Lakukan Pengecekan Stok & Kalkulasi Total SEBELUM ke Database
+        // =================================================================
+        $grandTotal = 0;
+        $itemsToProcess = [];
 
-            // 1. Simpan data transaksi utama
-            $transaksi = TransaksiPenjualan::create([
-                'nama_kasir' => $request->nama_kasir,
-                'email_pembeli' => $request->email_pembeli,
-            ]);
+        foreach ($request->products as $productData) {
+            $product = Product::find($productData['id']);
 
-            // 2. Simpan detail transaksi dan kurangi stok
-            foreach ($request->products as $productData) {
-                // Simpan item ke detail_transaksi_penjualan
-                $transaksi->details()->create([
-                    'id_product' => $productData['id'],
-                    'jumlah_pembelian' => $productData['jumlah'],
-                ]);
-
-                // Kurangi stok produk
-                $product = Product::find($productData['id']);
-                $product->stock -= $productData['jumlah'];
-                $product->save();
+            // Jika stok tidak mencukupi, langsung gagalkan proses
+            if ($product->stock < $productData['jumlah']) {
+                return redirect()->back()
+                    ->with('error', 'Stok untuk produk "' . $product->title . '" tidak mencukupi. Sisa stok: ' . $product->stock)
+                    ->withInput();
             }
 
-            DB::commit(); // Jika semua berhasil, simpan permanen
+            $subtotal = $product->price * $productData['jumlah'];
+            $grandTotal += $subtotal;
+
+            // Siapkan data untuk disimpan nanti
+            $itemsToProcess[] = [
+                'product' => $product,
+                'jumlah' => $productData['jumlah'],
+                'harga_saat_transaksi' => $product->price, // Kunci harga saat ini
+                'subtotal' => $subtotal,
+            ];
+        }
+
+        // =================================================================
+        // 2. Gunakan DB Transaction (Closure-based lebih ringkas & aman)
+        // =================================================================
+        try {
+            DB::transaction(function () use ($request, $grandTotal, $itemsToProcess) {
+                // A. Simpan data transaksi utama dengan total harga
+                $transaksi = TransaksiPenjualan::create([
+                    'nama_kasir' => $request->nama_kasir,
+                    'email_pembeli' => $request->email_pembeli,
+                    'total_harga' => $grandTotal, // Simpan total harga
+                ]);
+
+                // B. Simpan detail transaksi dan kurangi stok
+                foreach ($itemsToProcess as $item) {
+                    $transaksi->details()->create([
+                        'id_product' => $item['product']->id,
+                        'jumlah_pembelian' => $item['jumlah'],
+                        'harga_saat_transaksi' => $item['harga_saat_transaksi'], // Simpan harga
+                        'subtotal' => $item['subtotal'], // Simpan subtotal
+                    ]);
+
+                    // C. Kurangi stok produk dengan metode yang lebih aman
+                    $item['product']->decrement('stock', $item['jumlah']);
+                }
+            });
 
             return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil dibuat.');
 
         } catch (\Exception $e) {
-            DB::rollBack(); // Jika ada error, batalkan semua perubahan
             return redirect()->back()->with('error', 'Gagal membuat transaksi: ' . $e->getMessage())->withInput();
         }
     }

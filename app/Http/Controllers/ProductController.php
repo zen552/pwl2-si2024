@@ -61,7 +61,7 @@ class ProductController extends Controller
         //validate form
         $validatedData = $request->validate([
             'image'                 => 'required|image|mimes:jpeg,jpg,png|max:10240',
-            'title'                 => 'required|min:5',
+            'title'                 => 'required|min:4',
             'id_supplier'           => 'required|integer',
             'product_category_id'   => 'required|integer',
             'description'           => 'required|min:10',
@@ -127,7 +127,7 @@ class ProductController extends Controller
         //validate form
         $request->validate([
             'image'                 => 'image|mimes:jpeg,jpg,png|max:10240',
-            'title'                 => 'required|min:5',
+            'title'                 => 'required|min:4',
             'id_supplier'           => 'required|integer',
             'product_category_id'   => 'required|integer',
             'description'           => 'required|min:10',

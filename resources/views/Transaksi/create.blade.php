@@ -6,7 +6,8 @@
     <h1>Buat Transaksi Baru</h1>
 
     <div class="card" x-data="transactionForm()">
-        <form action="{{ route('transaksi.store') }}" method="POST">            @csrf
+        <form action="{{ route('transaksi.store') }}" method="POST">            
+            @csrf
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -29,14 +30,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- 3. Gunakan <template> dan x-for untuk mengulang baris berdasarkan data 'items' --}}
                         <template x-for="(item, index) in items" :key="index">
                             <tr>
                                 <td>
-                                    {{-- Pastikan nama input dalam format array agar bisa dibaca Laravel --}}
                                     <select :name="`products[${index}][id]`" class="form-select" required>
                                         <option value="">Pilih Produk</option>
-                                        {{-- Asumsi variabel $products dikirim dari Controller --}}
                                         @foreach ($products as $product)
                                             <option value="{{ $product->id }}">{{ $product->title }} (Stok: {{ $product->stock }})</option>
                                         @endforeach
@@ -46,7 +44,6 @@
                                     <input type="number" :name="`products[${index}][jumlah]`" class="form-control" min="1" value="1" required>
                                 </td>
                                 <td>
-                                    {{-- Tombol hapus memanggil fungsi removeItem dengan index barisnya --}}
                                     <button type="button" class="btn btn-danger" @click="removeItem(index)">Hapus</button>
                                 </td>
                             </tr>
@@ -54,7 +51,6 @@
                     </tbody>
                 </table>
 
-                {{-- 4. Tambahkan @click untuk memanggil fungsi addItem saat tombol diklik --}}
                 <button type="button" class="btn btn-success" @click="addItem()">+ Tambah Produk</button>
             </div>
             <div class="card-footer text-end">
@@ -64,7 +60,6 @@
         </form>
     </div>
 
-    {{-- 2. Buat fungsi Javascript untuk mengelola state form --}}
     <script>
         function transactionForm() {
             return {
