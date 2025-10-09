@@ -1,37 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie-edge">
-    <title>Add New Product</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<style>
-    .button-container {
-        position: fixed;
-        bottom: 20px;
-        left: 0;
-        right: 0;
-        text-align: center;
-        padding: 0 20px;
-    }
+@extends('layouts.app')
 
-    .btn-back {
-        background-color: #0d6efd;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn-back:hover {
-        background-color: #0b5ed7;
-    }
-</style>
-<body style="background: lightgray">
+@section('content')
     <div class="container mt-5 mb-5">
         <div class="row">
             <div class="col-md-12">
@@ -93,8 +62,10 @@
         </div>
     </div>
     <div class="button-container">
-        <button onclick="window.history.back()" class="btn-back">Kembali</button>
+        <button onclick="window.history.back()" class="btn btn-back">Kembali</button>
     </div>
+@endsection
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.ckeditor.com/4.13.1/standard/ckeditor.js"></script>
     <script>
