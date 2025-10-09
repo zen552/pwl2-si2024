@@ -21,20 +21,6 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
     /**
-     * create
-     * 
-     * @return View
-     */
-    public function create(): View
-{
-    $categories = Category_product::all();  // Ambil semua kategori
-    $suppliers  = Supplier::all();          // Ambil semua supplier
-
-    return view('products.create', compact('categories', 'suppliers'));
-}
-
-
-    /**
      * index
      * 
      * @return void
@@ -49,6 +35,19 @@ class ProductController extends Controller
         return view('products.index', compact('products'));
     }
 
+    /**
+     * create
+     * 
+     * @return View
+     */
+    public function create(): View
+    {
+    $categories = Category_product::all();  // Ambil semua kategori
+    $suppliers  = Supplier::all();          // Ambil semua supplier
+
+    return view('products.create', compact('categories', 'suppliers'));
+    }
+    
     /**
      * store
      * 
