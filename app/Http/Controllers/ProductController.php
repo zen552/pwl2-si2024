@@ -21,22 +21,6 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
     /**
-     * create
-     * 
-     * @return View
-     */
-    public function create(): View
-    {
-        $category_product = new Category_product;
-        $supplier         = new Supplier;
-
-        $data['categories'] = $category_product->get_category_product()->get();
-        $data['suppliers'] = $supplier->get_supplier()->get();
-
-        return view('products.create', compact('data'));
-    }
-
-    /**
      * index
      * 
      * @return void
@@ -51,6 +35,19 @@ class ProductController extends Controller
         return view('products.index', compact('products'));
     }
 
+    /**
+     * create
+     * 
+     * @return View
+     */
+    public function create(): View
+    {
+    $categories = Category_product::all();  // Ambil semua kategori
+    $suppliers  = Supplier::all();          // Ambil semua supplier
+
+    return view('products.create', compact('categories', 'suppliers'));
+    }
+    
     /**
      * store
      * 
@@ -109,20 +106,14 @@ class ProductController extends Controller
      * @return View
      */
     public function edit(string $id): View
-    {
-        //get product by ID
-        $product_model = new Product;
-        $data['product'] = $product_model->get_product()->where("products.id", $id)->firstOrFail();
-        
-        $category_product = new Category_product;
-        $data['categories'] = $category_product->get_category_product()->get();
+{
+    $product = Product::findOrFail($id);           // Ambil product
+    $categories = Category_product::all();         // Ambil semua kategori
+    $suppliers  = Supplier::all();                 // Ambil semua supplier
 
-        $supplier = new Supplier;
-        $data['suppliers_']  = $supplier->get_supplier()->get();
+    return view('products.edit', compact('product', 'categories', 'suppliers'));
+}
 
-        //render view with product
-        return view('products.edit', compact('data'));
-    }
     /**
      * update
      * 
