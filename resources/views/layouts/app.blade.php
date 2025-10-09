@@ -57,9 +57,6 @@
             <i class="bi bi-shop pet-icon"></i>
             <h4>PetShop</h4>
         </div>
-        <a href="{{ url('/dashboard') }}" class="{{ request()->is('dashboard') ? 'active' : '' }}">
-            <i class="bi bi-house-door"></i> Dashboard
-        </a>
         <a href="{{ url('/products') }}" class="{{ request()->is('products*') ? 'active' : '' }}">
             <i class="bi bi-box"></i> Products
         </a>
