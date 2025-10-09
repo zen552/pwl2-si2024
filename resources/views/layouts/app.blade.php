@@ -69,7 +69,7 @@
         <a href="{{ url('/categories') }}" class="{{ request()->is('categories*') ? 'active' : '' }}">
             <i class="bi bi-tags"></i> Kategori Produk
         </a>
-        <a href="{{ url('/transactions') }}" class="{{ request()->is('transactions*') ? 'active' : '' }}">
+        <a href="{{ url('/transaksi') }}" class="{{ request()->is('transaksi*') ? 'active' : '' }}">
             <i class="bi bi-cash-stack"></i> Transaksi
         </a>
     </div>

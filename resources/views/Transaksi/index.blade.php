@@ -1,28 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie-edge">
-    <title>Data Transaksi</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body style="background: lightgray">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">Data Logs</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-              <a class="nav-link" href="{{route('products.index')}}">Products</a>
-              <a class="nav-link active" aria-current="page" href="{{route('transaksi.index')}}">Transaction</a>
-            </div>
-          </div>
-        </div>
-      </nav>
-    <div class="container ">
+@extends('layouts.app')
+
+@section('content')
+    <div class="container mt-4">
         <div class="row">
             <div class="col-md-12">
                 <div class="">
@@ -53,8 +32,10 @@
                                             <a href="{{ route('transaksi.show', $t->id) }}" class="btn btn-sn btn-dark">SHOW</a>
                                             <a href="{{ route('transaksi.edit', $t->id) }}" class="btn btn-sn btn-primary">EDIT</a>
                                             @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sn btn-danger">HAPUS</button>
+                                        @method('DELETE')
+                                        <button type="button" class="btn btn-sm btn-danger btn-delete" data-nama="{{ $product->title }}">
+                                            HAPUS
+                                        </button>
                                         </form>
                                     </td>
                                 </tr>
@@ -75,27 +56,53 @@
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        //message with sweetalert
-        @if(session('success'))
+@endsection
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Notifikasi SweetAlert dari session
+    @if (session('success'))
+        Swal.fire({
+            icon: "success",
+            title: "Berhasil",
+            text: "{{ session('success') }}",
+            showConfirmButton: false,
+            timer: 2000
+        });
+    @elseif(session('error'))
+        Swal.fire({
+            icon: "error",
+            title: "GAGAL!",
+            text: "{{ session('error') }}",
+            showConfirmButton: false,
+            timer: 2000
+        });
+    @endif
+
+    // Konfirmasi hapus data
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+            let form = this.closest('form');
+            let namaProduk = this.getAttribute('data-nama');
+
             Swal.fire({
-                icon:"success",
-                title: "BERHASIL",
-                text: "{{ session('success')}}",
-                showConfirmButton: false,
-                timer: 2000
+                title: 'Apakah Anda yakin akan menghapus ' + namaProduk + '?',
+                text: "Data produk akan dihapus permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
             });
-            @elseif(session('error'))
-                Swal.fire({
-                    icon: "error",
-                    title: "GAGAL",
-                    text: "{{session('error')}}",
-                    showConfirmButton: false,
-                    timer:2000
-                });
-            @endif
-    </script>
-</body>
-</html>
+        });
+    });
+</script>
+@endsection
