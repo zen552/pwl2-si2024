@@ -11,8 +11,6 @@ Route::get('/', function () {
 
 Route::resource('suppliers', SupplierController::class);
 Route::resource('categories', CategoryController::class);
-Route::resource('transactions', TransactionController::class);
-
 
 //route resource for products
 Route::resource('/products', \App\Http\Controllers\ProductController::class);
