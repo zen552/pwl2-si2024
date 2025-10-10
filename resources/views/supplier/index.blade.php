@@ -25,11 +25,59 @@
                     <form action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
-                        <button class="btn btn-danger btn-sm" onclick="return confirm('Yakin hapus?')">Hapus</button>
+                        <button class="btn btn-sm btn-danger btn-delete" data-nama="{{ $supplier->supplier_name }}">Hapus</button>
                     </form>
                 </td>
             </tr>
             @endforeach
         </tbody>
     </table>
+@endsection
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Notifikasi SweetAlert dari session
+    @if (session('success'))
+        Swal.fire({
+            icon: "success",
+            title: "Berhasil",
+            text: "{{ session('success') }}",
+            showConfirmButton: false,
+            timer: 2000
+        });
+    @elseif(session('error'))
+        Swal.fire({
+            icon: "error",
+            title: "GAGAL!",
+            text: "{{ session('error') }}",
+            showConfirmButton: false,
+            timer: 2000
+        });
+    @endif
+
+    // Konfirmasi hapus data
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+            let form = this.closest('form');
+            let namaSupplier = this.getAttribute('data-nama');
+
+            Swal.fire({
+                title: 'Apakah Anda yakin akan menghapus ' + namaSupplier + '?',
+                text: "Data Supplier akan dihapus permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+</script>
 @endsection

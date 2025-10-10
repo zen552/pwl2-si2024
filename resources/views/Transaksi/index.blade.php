@@ -41,7 +41,7 @@
                                 <form action="{{ route('transaksi.destroy', $transaksi->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus transaksi ini?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                    <button class="btn btn-sm btn-danger btn-delete" data-nama="{{ $transaksi->id }}">Hapus</button>
                                 </form>
                             </td>
                         </tr>
@@ -57,4 +57,52 @@
             {{ $transaksis->links() }}
         </div>
     </div>
+@endsection
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Notifikasi SweetAlert dari session
+    @if (session('success'))
+        Swal.fire({
+            icon: "success",
+            title: "Berhasil",
+            text: "{{ session('success') }}",
+            showConfirmButton: false,
+            timer: 2000
+        });
+    @elseif(session('error'))
+        Swal.fire({
+            icon: "error",
+            title: "GAGAL!",
+            text: "{{ session('error') }}",
+            showConfirmButton: false,
+            timer: 2000
+        });
+    @endif
+
+    // Konfirmasi hapus data
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+            let form = this.closest('form');
+            let namaTransaksi = this.getAttribute('data-nama');
+
+            Swal.fire({
+                title: 'Apakah Anda yakin akan menghapus TRX-' + namaTransaksi + '?',
+                text: "Data Transaksi akan dihapus permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+</script>
 @endsection
