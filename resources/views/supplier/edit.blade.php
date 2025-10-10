@@ -22,7 +22,7 @@
     </div>
 
     <div class="kartu-form">
-        <form action="{{ route('suppliers.update', $supplier->id) }}" method="POST">
+        <form action="{{ route('suppliers.update', $supplier->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -54,6 +54,22 @@
                 @error('pic_supplier')
                     <div class="pesan-error">{{ $message }}</div>
                 @enderror
+            </div>
+
+            {{-- Foto Supplier --}}
+            <div class="grup-formulir">
+                <label for="photo">Foto Supplier</label>
+                <input type="file" id="photo" name="photo" accept="image/*">
+                @if ($supplier->photo)
+                    <div style="margin-top: 0.8rem;">
+                        <img src="{{ asset('storage/' . $supplier->photo) }}" 
+                            alt="Foto Supplier" 
+                            width="120" 
+                            height="120" 
+                            style="object-fit: cover; border-radius: 10px; border: 1px solid #ddd;">
+                    </div>
+                @endif
+                @error('photo')<div class="pesan-error">{{ $message }}</div>@enderror
             </div>
 
             {{-- Tombol --}}

@@ -11,17 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('supplier', function (Blueprint $table) {
+            $table->string('photo')->nullable()->after('supplier_name');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::table('supplier', function (Blueprint $table) {
+            $table->dropColumn('photo');
+        });
     }
 };

@@ -23,7 +23,7 @@
     </div>
 
     <div class="kartu-form">
-        <form action="{{ route('suppliers.store') }}" method="POST">
+        <form action="{{ route('suppliers.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             {{-- Nama Supplier --}}
@@ -48,6 +48,17 @@
                     value="{{ old('pic_supplier') }}" 
                     required>
                 @error('pic_supplier')<div class="pesan-error">{{ $message }}</div>@enderror
+            </div>
+
+            {{-- Foto Supplier --}}
+            <div class="grup-formulir">
+                <label for="photo">Foto Supplier</label>
+                <input 
+                    type="file" 
+                    id="photo" 
+                    name="photo" 
+                    accept="image/*">
+                @error('photo')<div class="pesan-error">{{ $message }}</div>@enderror
             </div>
 
             {{-- Tombol Aksi --}}

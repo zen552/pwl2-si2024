@@ -137,7 +137,16 @@ class TransaksiPenjualanController extends Controller
      * UPDATE (ACTION): Memperbarui data transaksi di database.
      */
     public function update(Request $request, TransaksiPenjualan $transaksi)
-    {        
+    {
+        // Logika update bisa mirip dengan store:
+        // 1. Validasi
+        // 2. Mulai DB Transaction
+        // 3. Update data utama transaksi
+        // 4. Hapus detail lama, buat detail baru (atau logika yang lebih kompleks)
+        // 5. Kembalikan stok lama, kurangi stok baru
+        // 6. Commit atau Rollback
+        // (Untuk saat ini kita skip implementasi detailnya karena sangat bergantung pada business logic)
+        
         $request->validate([
             'nama_kasir' => 'required|string|max:50',
             'email_pembeli' => 'nullable|email',

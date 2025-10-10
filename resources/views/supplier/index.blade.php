@@ -119,7 +119,7 @@
                     <div class="grup-tombol-aksi">
                         <a href="{{ route('suppliers.show', $supplier->id) }}" class="tombol tombol--lihat">Lihat</a>
                         <a href="{{ route('suppliers.edit', $supplier->id) }}" class="tombol tombol--edit">Edit</a>
-                        <form action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus supplier ini?')">
+                        <form action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="tombol tombol--hapus">Hapus</button>

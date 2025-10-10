@@ -12,6 +12,16 @@
 
     <div class="kartu-form detail-supplier">
         <div class="detail-info">
+            @if($supplier->photo)
+                <div class="foto-supplier">
+                    <img src="{{ asset('storage/' . $supplier->photo) }}" alt="Foto {{ $supplier->supplier_name }}">
+                </div>
+            @else
+                <div class="foto-supplier">
+                    <img src="{{ asset('images/default-avatar.png') }}" alt="Default Photo">
+                </div>
+            @endif
+
             <h2>{{ $supplier->supplier_name }}</h2>
 
             <div class="info-item">
@@ -22,6 +32,11 @@
             <div class="info-item">
                 <strong>Nama Supplier:</strong>
                 <span>{{ $supplier->supplier_name }}</span>
+            </div>
+
+           <div class="info-item">
+                <strong>PIC Supplier:</strong>
+                <span>{{ $supplier->pic_supplier }}</span>
             </div>
 
             <div class="info-item">
@@ -68,6 +83,21 @@
     box-shadow: 0 10px 25px rgba(0,0,0,0.05);
     width: 100%;
     max-width: 700px;
+}
+
+.foto-supplier {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.foto-supplier img {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #f0e6d2;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .detail-info h2 {
