@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transaksi_penjualan', function (Blueprint $table) {
-            $table->id(); // int, auto-increment, primary key
+            $table->id(); 
             $table->string('nama_kasir', 50);
-            $table->text('email_pembeli')->nullable(); // nullable() berarti boleh kosong
-            $table->timestamp('tanggal_transaksi')->useCurrent(); // default ke waktu saat ini
-            $table->timestamps(); // membuat kolom created_at dan updated_at
+            $table->text('email_pembeli')->nullable(); 
+            $table->timestamp('tanggal_transaksi')->useCurrent(); 
+            $table->timestamps();
         });
     }
 
