@@ -1,96 +1,133 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Kategori: {{ $category->product_category_name }}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --warna-utama: #B57F50; --warna-sekunder: #A2B38B; --warna-aksen: #D4AF37;
-            --warna-bahaya: #dc3545; --warna-latar: #FFF8E7; --teks-terang: #FFF8E7;
-            --teks-gelap: #333; --font-utama: 'Nunito Sans', sans-serif; --font-judul: 'Poppins', sans-serif;
-            --bayangan: 0 4px 24px rgba(181, 127, 80, 0.08); --transisi: all 0.3s ease;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: var(--font-utama); background: var(--warna-latar); color: var(--teks-gelap); }
-        .wadah { display: flex; }
-        .bilah-sisi { width: 250px; background: var(--warna-utama); color: var(--teks-terang); height: 100vh; position: fixed; display: flex; flex-direction: column; padding: 2rem 0; }
-        .bilah-sisi .logo { text-align: center; padding: 0 1rem; margin-bottom: 2.5rem; }
-        .bilah-sisi .logo h1 { font-family: var(--font-judul); font-size: 1.7rem; }
-        .bilah-sisi .logo p { font-size: 0.8rem; opacity: 0.7; }
-        .bilah-sisi .navigasi-link { display: block; padding: 1rem 2rem; color: var(--teks-terang); text-decoration: none; margin: 0.5rem 1rem; border-radius: 12px; transition: var(--transisi); }
-        .bilah-sisi .navigasi-link:hover, .bilah-sisi .navigasi-link.aktif { background: rgba(255, 255, 255, 0.15); transform: translateX(5px); }
-        .konten-utama { margin-left: 250px; width: calc(100% - 250px); }
-        .header { background: #fff; padding: 2rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-        .header h1 { font-family: var(--font-judul); color: var(--warna-utama); font-size: 2rem; }
-        .isi-konten { padding: 2rem; }
-        .kartu { background: #fff; border-radius: 16px; padding: 2rem; box-shadow: var(--bayangan); }
-        .tombol { display: inline-block; padding: 0.6rem 1.2rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: none; border: none; }
-        .tombol--utama { background: var(--warna-aksen); color: white; }
-        .tombol--sekunder { background: #eee; color: var(--teks-gelap); }
-        .grup-formulir { margin-bottom: 1.5rem; }
-        .grup-formulir label { display: block; font-size: 0.9rem; font-weight: 600; color: var(--warna-sekunder); margin-bottom: 0.5rem; }
-        .input-teks, .input-area { width: 100%; padding: 0.9rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
-        .pesan-error { color: var(--warna-bahaya); font-size: 0.8rem; margin-top: 0.25rem; }
-        footer { text-align: center; padding: 2rem; color: #aaa; font-size: 0.9rem; margin-left: 250px; }
-        @media (max-width: 768px) { .bilah-sisi { display: none; } .konten-utama, footer { margin-left: 0; width: 100%; } }
-    </style>
-</head>
-<body>
-    <div class="wadah">
-        <aside class="bilah-sisi">
-            <div class="logo">
-                <h1>Pawfect</h1>
-                <p>Manajemen Sistem</p>
-            </div>
-            <nav>
-                <a href="#" class="navigasi-link">Dashboard</a>
-                <a href="#" class="navigasi-link">Produk</a>
-                <a href="{{ route('categories.index') }}" class="navigasi-link aktif">Kategori Produk</a>
-                <a href="#" class="navigasi-link">Supplier</a>
-                <a href="#" class="navigasi-link">Transaksi Penjualan</a>
-            </nav>
-        </aside>
+@extends('layouts.app')
+@section('judulHalaman', 'Edit Kategori Produk')
 
-        <main class="konten-utama">
-            <header class="header">
-                <div>
-                    <h1>Edit Kategori</h1>
-                    <p>Perbarui detail untuk: {{ $category->product_category_name }}</p>
-                </div>
-                <a href="{{ route('categories.index') }}" class="tombol tombol--sekunder">Kembali</a>
-            </header>
-
-            <div class="isi-konten">
-                <div class="kartu">
-                    {{-- Form ini akan mengirim data ke method 'update' di Controller --}}
-                    <form action="{{ route('categories.update', $category->id) }}" method="POST">
-                        @csrf
-                        @method('PUT') {{-- Ini wajib untuk proses update di Laravel --}}
-
-                        <div class="grup-formulir">
-                            <label for="nama">Nama Kategori</label>
-                            {{-- Tampilkan data lama dari database, atau data yang baru diinput jika validasi gagal --}}
-                            <input type="text" id="nama" name="product_category_name" class="input-teks @error('product_category_name') error @enderror" value="{{ old('product_category_name', $category->product_category_name) }}" required>
-                            @error('product_category_name')
-                                <div class="pesan-error">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="grup-formulir">
-                            <label for="deskripsi">Deskripsi</label>
-                            <textarea id="deskripsi" name="description" class="input-area" rows="4">{{ old('description', $category->description) }}</textarea>
-                        </div>
-
-                        <div style="text-align: right;">
-                            <button type="submit" class="tombol tombol--utama">Perbarui Kategori</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <footer>&copy; 2025 Pawfect Supplies</footer>
-        </main>
+@section('content')
+<div class="halaman-penuh">
+    <div class="header-tambah">
+        <div>
+            <h1>Edit Kategori Produk</h1>
+            <p>Perbarui informasi untuk kategori: <strong>{{ $category->product_category_name }}</strong></p>
+        </div>
     </div>
-</body>
-</html>
+
+    <div class="kartu-form">
+        <form action="{{ route('categories.update', $category->id) }}" method="POST">
+            @csrf
+            @method('PUT')
+
+            {{-- Nama Kategori --}}
+            <div class="grup-formulir">
+                <label for="product_category_name">Nama Kategori</label>
+                <input 
+                    type="text" 
+                    id="product_category_name" 
+                    name="product_category_name" 
+                    value="{{ old('product_category_name', $category->product_category_name) }}" 
+                    required>
+                @error('product_category_name')<div class="pesan-error">{{ $message }}</div>@enderror
+            </div>
+
+            {{-- Deskripsi --}}
+            <div class="grup-formulir">
+                <label for="description">Deskripsi</label>
+                <textarea 
+                    id="description" 
+                    name="description" 
+                    rows="4">{{ old('description', $category->description) }}</textarea>
+                @error('description')<div class="pesan-error">{{ $message }}</div>@enderror
+            </div>
+
+            {{-- Tombol --}}
+            <div class="tombol-aksi">
+                <a href="{{ route('categories.index') }}" class="tombol tombol--batal">Batal</a>
+                <button type="submit" class="tombol tombol--utama">Perbarui Kategori</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.halaman-penuh {
+    background-color: #FFF8E7;
+    padding: 3rem 4rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header-tambah {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.header-tambah h1 {
+    color: #8B5E3C;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+}
+.header-tambah p {
+    color: #9B7B5C;
+    font-size: 1rem;
+}
+
+.kartu-form {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 2.5rem 3rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    width: 90%;
+    max-width: 700px;
+}
+
+.grup-formulir { margin-bottom: 1.3rem; }
+label {
+    display: block;
+    font-weight: 600;
+    color: #8B5E3C;
+    margin-bottom: 0.4rem;
+}
+input, textarea {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 0.7rem;
+    font-size: 1rem;
+}
+textarea { resize: none; }
+
+.tombol-aksi {
+    text-align: right;
+    margin-top: 1.8rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.tombol {
+    display: inline-block;
+    padding: 0.8rem 1.6rem;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+.tombol--utama {
+    background-color: #D4A017;
+    color: white;
+}
+.tombol--utama:hover { background-color: #c4950f; }
+.tombol--batal {
+    background-color: #f2f2f2;
+    color: #555;
+}
+.tombol--batal:hover { background-color: #e0e0e0; }
+
+.pesan-error {
+    color: #cc0000;
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
+}
+</style>
+@endsection

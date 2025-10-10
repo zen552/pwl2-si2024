@@ -1,116 +1,151 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Supplier</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --warna-utama: #B57F50;
-            --warna-sekunder: #A2B38B;
-            --warna-aksen: #D4AF37;
-            --warna-latar: #FFF8E7;
-            --teks-gelap: #333;
-            --font-utama: 'Nunito Sans', sans-serif;
-            --font-judul: 'Poppins', sans-serif;
-            --bayangan: 0 4px 24px rgba(181, 127, 80, 0.08);
-            --transisi: all 0.3s ease;
-        }
+@extends('layouts.app')
+@section('judulHalaman', 'Tambah Supplier')
 
-        body {
-            font-family: var(--font-utama);
-            background: var(--warna-latar);
-            color: var(--teks-gelap);
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            padding-top: 3rem;
-        }
+@section('content')
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
 
-        .kartu {
-            background: #fff;
-            padding: 2rem 3rem;
-            border-radius: 16px;
-            box-shadow: var(--bayangan);
-            width: 480px;
-        }
+@if (session('error'))
+    <div class="alert alert-error">
+        {{ session('error') }}
+    </div>
+@endif
 
-        h2 {
-            font-family: var(--font-judul);
-            color: var(--warna-utama);
-            text-align: center;
-            margin-bottom: 2rem;
-        }
+<div class="halaman-penuh">
+    <div class="header-tambah">
+        <div>
+            <h1>Tambah Supplier</h1>
+            <p>Isi detail supplier baru di bawah ini untuk menambahkannya ke daftar supplier Anda.</p>
+        </div>
+    </div>
 
-        label {
-            font-weight: 600;
-        }
-
-        input {
-            width: 100%;
-            padding: 0.6rem 1rem;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            margin-top: 0.3rem;
-            margin-bottom: 1.2rem;
-            transition: var(--transisi);
-        }
-
-        input:focus {
-            border-color: var(--warna-aksen);
-            outline: none;
-            box-shadow: 0 0 5px rgba(212,175,55,0.3);
-        }
-
-        .tombol {
-            display: inline-block;
-            padding: 0.7rem 1.4rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: var(--transisi);
-        }
-
-        .tombol--utama {
-            background: var(--warna-aksen);
-            color: white;
-            margin-right: 0.5rem;
-        }
-
-        .tombol--utama:hover {
-            background: #c9a63b;
-        }
-
-        .tombol--sekunder {
-            background: #f3f3f3;
-            color: var(--teks-gelap);
-        }
-
-        .tombol--sekunder:hover {
-            background: #e2e2e2;
-        }
-    </style>
-</head>
-<body>
-    <div class="kartu">
-        <h2>Tambah Supplier</h2>
+    <div class="kartu-form">
         <form action="{{ route('suppliers.store') }}" method="POST">
             @csrf
-            <label>Nama Supplier:</label><br>
-            <input type="text" name="supplier_name" required><br>
 
-            <label>PIC Supplier:</label><br>
-            <input type="text" name="pic_supplier" required><br>
+            {{-- Nama Supplier --}}
+            <div class="grup-formulir">
+                <label for="supplier_name">Nama Supplier</label>
+                <input 
+                    type="text" 
+                    id="supplier_name" 
+                    name="supplier_name" 
+                    value="{{ old('supplier_name') }}" 
+                    required>
+                @error('supplier_name')<div class="pesan-error">{{ $message }}</div>@enderror
+            </div>
 
-            <label>No. Telepon:</label><br>
-            <input type="text" name="phone" required><br>
-            <button type="submit" class="tombol tombol--utama">Simpan</button>
-            <a href="{{ route('suppliers.index') }}" class="tombol tombol--sekunder">Kembali</a>
+            {{-- PIC Supplier --}}
+            <div class="grup-formulir">
+                <label for="pic_supplier">PIC Supplier</label>
+                <input 
+                    type="text" 
+                    id="pic_supplier" 
+                    name="pic_supplier" 
+                    value="{{ old('pic_supplier') }}" 
+                    required>
+                @error('pic_supplier')<div class="pesan-error">{{ $message }}</div>@enderror
+            </div>
+
+            {{-- Tombol Aksi --}}
+            <div class="tombol-aksi">
+                <a href="{{ route('suppliers.index') }}" class="tombol tombol--batal">Batal</a>
+                <button type="submit" class="tombol tombol--utama">Simpan Supplier</button>
+            </div>
         </form>
     </div>
-</body>
-</html>
+</div>
+
+<style>
+.halaman-penuh {
+    background-color: #FFF8E7;
+    padding: 3rem 4rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header-tambah {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.header-tambah h1 {
+    color: #8B5E3C;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+}
+.header-tambah p {
+    color: #9B7B5C;
+    font-size: 1rem;
+}
+
+.kartu-form {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 2.5rem 3rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    width: 90%;
+    max-width: 700px;
+}
+
+.grup-formulir { 
+    margin-bottom: 1.3rem; 
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    color: #8B5E3C;
+    margin-bottom: 0.4rem;
+}
+
+input {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 0.7rem;
+    font-size: 1rem;
+}
+
+.tombol-aksi {
+    text-align: right;
+    margin-top: 1.8rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.tombol {
+    display: inline-block;
+    padding: 0.8rem 1.6rem;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.tombol--utama {
+    background-color: #D4A017;
+    color: white;
+}
+.tombol--utama:hover { background-color: #c4950f; }
+
+.tombol--batal {
+    background-color: #f2f2f2;
+    color: #555;
+}
+.tombol--batal:hover { background-color: #e0e0e0; }
+
+.pesan-error {
+    color: #cc0000;
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
+}
+</style>
+@endsection

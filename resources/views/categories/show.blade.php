@@ -1,37 +1,39 @@
 @extends('layouts.app')
-@section('judulHalaman', 'Detail Supplier')
+@section('judulHalaman', 'Detail Kategori Produk')
 
 @section('content')
 <div class="halaman-penuh">
     <div class="header-tambah">
         <div>
-            <h1>Detail Supplier</h1>
-            <p>Informasi dasar mengenai supplier yang terdaftar.</p>
+            <h1>Detail Kategori Produk</h1>
+            <p>Informasi lengkap tentang kategori produk ini.</p>
         </div>
     </div>
 
-    <div class="kartu-form detail-supplier">
+    <div class="kartu-form detail-produk">
         <div class="detail-info">
-            <h2>{{ $supplier->supplier_name }}</h2>
+            <h2>{{ $category->product_category_name }}</h2>
 
             <div class="info-item">
-                <strong>ID Supplier:</strong>
-                <span>{{ $supplier->id }}</span>
+                <strong>ID Kategori:</strong>
+                <span>{{ $category->id }}</span>
             </div>
 
             <div class="info-item">
-                <strong>Nama Supplier:</strong>
-                <span>{{ $supplier->supplier_name }}</span>
+                <strong>Deskripsi:</strong>
+                <div class="deskripsi-box">
+                    {{ $category->description ?? 'Tidak ada deskripsi.' }}
+                </div>
             </div>
 
             <div class="info-item">
                 <strong>Dibuat pada:</strong>
-                <span>{{ $supplier->created_at->format('d M Y') }}</span>
+                <span>{{ $category->created_at->format('d M Y') }}</span>
             </div>
         </div>
 
         <div class="tombol-aksi">
-            <a href="{{ route('suppliers.index') }}" class="tombol tombol--batal">Kembali ke Daftar</a>
+            <a href="{{ route('categories.index') }}" class="tombol tombol--batal">Kembali ke Daftar</a>
         </div>
     </div>
 </div>
@@ -83,10 +85,20 @@
 .info-item strong {
     color: #8B5E3C;
     display: inline-block;
-    width: 150px;
+    width: 130px;
 }
 .info-item span {
     color: #555;
+}
+
+.deskripsi-box {
+    background: #FFF7E1;
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+    color: #444;
+    line-height: 1.5;
+    margin-top: 0.3rem;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
 }
 
 .tombol-aksi {

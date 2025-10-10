@@ -2,70 +2,73 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ProductCategory;
+use App\Models\ProductCategory; // Panggil model ProductCategory
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator; // <-- INI YANG PALING PENTING!
 
 class ProductCategoryController extends Controller
 {
-    /**
-     * Menampilkan halaman utama (daftar kategori).
-     */
+    // Method untuk menampilkan semua data kategori (halaman utama)
     public function index()
     {
-        $semuaKategori = ProductCategory::latest()->get();
-        return view('categories.index', ['categories' => $semuaKategori]);
+        $categories = ProductCategory::latest()->get(); // Ambil semua data, urutkan dari yg terbaru
+        return view('categories.index', compact('categories'));
     }
 
-    /**
-     * Method `store` untuk menyimpan data baru via AJAX.
-     */
+    // Method untuk menampilkan halaman form tambah data
+    public function create()
+    {
+        return view('categories.create');
+    }
+
+    // Method untuk menyimpan data baru ke database
     public function store(Request $request)
     {
-        // 1. Validasi data yang masuk dari form
-        $validator = Validator::make($request->all(), [
-            'product_category_name' => 'required|string|max:255|unique:category_product',
+        // Validasi input
+        $request->validate([
+            'product_category_name' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
 
-        // 2. Jika validasi gagal, kirim response error JSON
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
+        // Simpan data baru
+        ProductCategory::create($request->all());
 
-        // 3. Jika berhasil, buat data baru dan kirim response sukses JSON
-        ProductCategory::create($validator->validated());
-        return response()->json(['success' => 'Kategori berhasil ditambahkan!']);
+        // Alihkan kembali ke halaman utama dengan pesan sukses
+        return redirect()->route('categories.index')->with('success', 'Kategori baru berhasil ditambahkan!');
     }
 
-    /**
-     * Method `update` untuk memperbarui data via AJAX.
-     */
+    // Method untuk menampilkan detail satu kategori (view)
+    public function show(ProductCategory $category)
+    {
+        return view('categories.show', compact('category'));
+    }
+
+    // Method untuk menampilkan halaman form edit data
+    public function edit(ProductCategory $category)
+    {
+        return view('categories.edit', compact('category'));
+    }
+
+    // Method untuk memperbarui data di database
     public function update(Request $request, ProductCategory $category)
     {
-        // 1. Validasi data (aturan 'unique' diubah sedikit untuk proses update)
-        $validator = Validator::make($request->all(), [
-            'product_category_name' => 'required|string|max:255|unique:category_product,product_category_name,' . $category->id,
+        // Validasi input
+        $request->validate([
+            'product_category_name' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
 
-        // 2. Jika validasi gagal, kirim response error JSON
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
+        // Update data yang ada
+        $category->update($request->all());
 
-        // 3. Jika berhasil, update data dan kirim response sukses JSON
-        $category->update($validator->validated());
-        return response()->json(['success' => 'Kategori berhasil diperbarui!']);
+        // Alihkan kembali ke halaman utama dengan pesan sukses
+        return redirect()->route('categories.index')->with('success', 'Kategori berhasil diperbarui!');
     }
 
-    /**
-     * Method `destroy` untuk menghapus data via AJAX.
-     */
+    // Method untuk menghapus data
     public function destroy(ProductCategory $category)
     {
-        // Hapus data dan kirim response sukses JSON
         $category->delete();
-        return response()->json(['success' => 'Kategori berhasil dihapus!']);
+
+        return redirect()->route('categories.index')->with('success', 'Kategori berhasil dihapus!');
     }
 }
