@@ -49,6 +49,9 @@
                 </div>
             </div>
         </div>
+        <div class="tombol-aksi">
+            <a href="{{ route('products.index') }}" class="tombol tombol--batal">Kembali ke Daftar</a>
+        </div>
     </div>
 </div>
 
@@ -97,7 +100,7 @@
 
 .detail-gambar img {
     width: 100%;
-    max-width: 400px;
+    max-width: 300px;
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     display: block;
@@ -132,6 +135,30 @@
     line-height: 1.5;
     margin-top: 0.3rem;
     box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+}
+
+.tombol-aksi {
+    text-align: right;
+    margin-top: 2rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.tombol {
+    display: inline-block;
+    padding: 0.8rem 1.6rem;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+.tombol--batal {
+    background-color: #f2f2f2;
+    color: #555;
+}
+.tombol--batal:hover {
+    background-color: #e0e0e0;
 }
 
 /* Responsif */
