@@ -1,38 +1,14 @@
-<?php
-// resources/views/categories/index.blade.php - FINAL WORKING VERSION
+@extends('layouts.app')
 
-// Pastikan $categories dikirim dari controller
-use App\Http\Controllers\ProductCategoryController;
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PawPal - Product Categories</title>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <style>
-        /* CSS Disederhanakan */
-        body { font-family: 'Quicksand', sans-serif; }
-        @keyframes wobble { 0%, 100% { transform: rotate(0deg); } 15% { transform: rotate(-5deg); } 30% { transform: rotate(3deg); } }
-        .wobble-hover:hover { animation: wobble 0.8s ease-in-out; }
-        .card-hover:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); }
-        .pawpal-gradient { background: linear-gradient(135deg, #fffcf9 0%, #fef3c7 20%, #fde68a 100%); }
-        .coral-gradient { background: linear-gradient(135deg, #fecaca 0%, #fed7aa 100%); }
-    </style>
-</head>
-<body class="min-h-full pawpal-gradient">
-    <div class="bg-white/90 backdrop-blur-sm border-b border-orange-100 sticky top-0 z-10">
-        <div class="max-w-7xl mx-auto px-6 py-4">
-            <div class="flex items-center justify-between">
-                <button id="addCategoryBtn" class="coral-gradient text-white px-6 py-2 rounded-full font-medium hover:shadow-lg transition-all duration-300 wobble-hover">
-    + Add Category
-</button>
-            </div>
+@section('content')
+<div class="bg-white/90 backdrop-blur-sm border-b border-orange-100 sticky top-0 z-10">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="flex items-center justify-between">
+            <button id="addCategoryBtn" class="coral-gradient text-white px-6 py-2 rounded-full font-medium hover:shadow-lg transition-all duration-300 wobble-hover"> + Add Category
+            </button>
         </div>
     </div>
+</div>
 
     <div class="max-w-7xl mx-auto px-6 py-8">
         <div class="mb-8 text-center">
@@ -112,7 +88,9 @@ use App\Http\Controllers\ProductCategoryController;
             </form>
         </div>
     </div>
+@endsection
 
+@section('scripts')
     <script>
         let editingId = null;
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -235,5 +213,4 @@ fetch(url, {
             });
         }
     </script>
-</body>
-</html>
+@endsection
