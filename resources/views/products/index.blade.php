@@ -1,100 +1,133 @@
 @extends('layouts.app')
-
 @section('content')
-<div class="container mt-4">
-    <h3 class="text-center my-4">Daftar Products</h3>
-    <hr>
 
-    <div class="card border-0 shadow-sm rounded">
-        <div class="card-body">
-            <a href="{{ route('products.create') }}" class="btn btn-md btn-success mb-3">ADD PRODUCT</a>
+<style>
+    :root {
+        --warna-utama: #B57F50;
+        --warna-sekunder: #A2B38B;
+        --warna-aksen: #D4AF37;
+        --warna-bahaya: #dc3545;
+        --teks-gelap: #333;
+        --transisi: all 0.3s ease;
+        --bayangan: 0 4px 24px rgba(181, 127, 80, 0.08);
+    }
+    .kartu {
+        background: #fff; border-radius: 16px; padding: 2rem;
+        box-shadow: var(--bayangan); margin-top: 1.5rem;
+    }
+    .kartu__judul {
+        font-family: 'Poppins', sans-serif;
+        color: var(--warna-utama);
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    .tabel {
+        width: 100%; border-collapse: collapse;
+    }
+    .tabel th, .tabel td {
+        padding: 1.25rem 1rem;
+        text-align: left;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .tabel th {
+        color: var(--warna-sekunder);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+    }
+    .tabel tr:hover { background: #fafafa; }
+    .tabel .harga { font-weight: 600; color: var(--warna-utama); }
+    .tabel .grup-tombol-aksi { display: flex; gap: 0.5rem; }
 
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col">IMAGE</th>
-                        <th scope="col">TITLE</th>
-                        <th scope="col">SUPPLIER</th>
-                        <th scope="col">CATEGORY</th>
-                        <th scope="col">PRICE</th>
-                        <th scope="col">STOCK</th>
-                        <th scope="col" style="width: 20%">ACTION</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($products as $product)
-                        <tr>
-                            <td class="text-center">
-                                <img src="{{ asset('storage/image/'.$product->image) }}" class="rounded" style="width: 150px">
-                            </td>
-                            <td>{{ $product->title }}</td>
-                            <td>{{ $product->supplier_name }}</td>
-                            <td>{{ $product->product_category_name }}</td>
-                            <td>{{ "Rp " . number_format($product->price,2,',','.') }}</td>
-                            <td>{{ $product->stock }}</td>
-                            <td class="text-center">
-                                <form action="{{ route('products.destroy', $product->id) }}" method="POST">
-                                    <a href="{{ route('products.show', $product->id) }}" class="btn btn-sm btn-dark">SHOW</a>
-                                    <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm btn-primary">EDIT</a>
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" class="btn btn-sm btn-danger btn-delete" data-nama="{{ $product->title }}">
-                                        HAPUS
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7" class="text-center">Data Products belum tersedia.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+    .tombol {
+        padding: 0.6rem 1.2rem;
+        border: none; border-radius: 8px;
+        font-size: 0.85rem; font-weight: 600;
+        cursor: pointer; transition: var(--transisi);
+        text-decoration: none;
+    }
+    .tombol:hover { transform: translateY(-2px); }
+    .tombol--utama { background: var(--warna-aksen); color: white; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3); }
+    .tombol--lihat {
+    background: rgba(30, 144, 255, 0.15); /* biru lembut transparan */
+    color: #1e90ff;
+}
+.tombol--lihat:hover {
+    background: rgba(30, 144, 255, 0.25);
+}
+    .tombol--edit { background: rgba(212, 175, 55, 0.1); color: var(--warna-aksen); }
+    .tombol--hapus { background: rgba(220, 53, 69, 0.1); color: var(--warna-bahaya); }
+</style>
 
-            {{ $products->links() }}
-        </div>
+<header class="header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+    <div>
+        <h1 style="font-family:'Poppins',sans-serif; color:var(--warna-utama); font-size:2rem;">Manajemen Produk</h1>
+        <p>Kelola semua produk Anda di sini</p>
     </div>
-</div>
-@endsection
+    <a href="{{ route('products.create') }}" class="tombol tombol--utama">+ Tambah Produk</a>
+</header>
 
-@section('scripts')
+<div class="kartu">
+    <h2 class="kartu__judul">Daftar Produk</h2>
+    <table class="tabel">
+        <thead>
+            <tr>
+                <th>Gambar</th>
+                <th>Nama Produk</th>
+                <th>Kategori</th>
+                <th>Supplier</th>
+                <th>Stok</th>
+                <th>Harga</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+    @forelse($products as $product)
+        <tr>
+            <td>
+                <img src="{{ asset('storage/image/' . $product->image) }}" alt="gambar" width="60" style="border-radius:8px;">
+            </td>
+            <td>{{ $product->title }}</td>
+            <td>{{ $product->category->product_category_name ?? '-' }}</td>
+            <td>{{ $product->supplier->supplier_name ?? '-' }}</td>
+            <td>{{ $product->stock }}</td>
+            <td class="harga">Rp{{ number_format($product->price, 0, ',', '.') }}</td>
+            <td>
+                        <div class="grup-tombol-aksi">
+                        <a href="{{ route('products.show', $product->id) }}" class="tombol tombol--lihat">Lihat</a>
+                            <a href="{{ route('products.edit', $product->id) }}" class="tombol tombol--edit">Edit</a>
+                            <form action="{{ route('products.destroy', $product->id) }}" method="POST">
+                                @method('DELETE')
+                                <button type="submit" class="tombol tombol--hapus">Hapus</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="7" style="text-align:center; padding:2rem;">Belum ada produk. Silakan tambahkan.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    // Notifikasi SweetAlert dari session
-    @if (session('success'))
-        Swal.fire({
-            icon: "success",
-            title: "Berhasil",
-            text: "{{ session('success') }}",
-            showConfirmButton: false,
-            timer: 2000
-        });
-    @elseif(session('error'))
-        Swal.fire({
-            icon: "error",
-            title: "GAGAL!",
-            text: "{{ session('error') }}",
-            showConfirmButton: false,
-            timer: 2000
-        });
-    @endif
-
-    // Konfirmasi hapus data
-    document.querySelectorAll('.btn-delete').forEach(button => {
-        button.addEventListener('click', function (e) {
+document.addEventListener('DOMContentLoaded', function () {
+    // Tangkap semua form hapus
+    const forms = document.querySelectorAll('form[method="POST"][action*="products"]');
+    
+    forms.forEach(form => {
+        form.addEventListener('submit', function (e) {
             e.preventDefault();
-            let form = this.closest('form');
-            let namaProduk = this.getAttribute('data-nama');
 
             Swal.fire({
-                title: 'Apakah Anda yakin akan menghapus ' + namaProduk + '?',
-                text: "Data produk akan dihapus permanen!",
+                title: 'Yakin ingin menghapus produk ini?',
+                text: "Data yang dihapus tidak dapat dikembalikan!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, hapus!',
+                confirmButtonColor: '#D4A017',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus',
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -103,5 +136,19 @@
             });
         });
     });
+});
 </script>
+
+{{-- Notifikasi sukses --}}
+@if(session('success'))
+<script>
+Swal.fire({
+    icon: 'success',
+    title: 'Berhasil!',
+    text: '{{ session('success') }}',
+    showConfirmButton: false,
+    timer: 2000
+});
+</script>
+@endif
 @endsection

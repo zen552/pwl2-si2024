@@ -72,8 +72,6 @@ class Product extends Model
         }
     }
 
-
-
     public function supplier()
 {
     return $this->belongsTo(Supplier::class, 'supplier_id');
@@ -81,8 +79,6 @@ class Product extends Model
 
 public function category()
 {
-    return $this->belongsTo(Category_product::class, 'product_category_id');
+    return $this->belongsTo(ProductCategory::class, 'product_category_id');
 }
-
-
 }
