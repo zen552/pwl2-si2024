@@ -2,102 +2,73 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ProductCategory;
+use App\Models\ProductCategory; // Panggil model ProductCategory
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Exception;
 
 class ProductCategoryController extends Controller
 {
-    /**
-     * Menampilkan semua kategori.
-     */
+    // Method untuk menampilkan semua data kategori (halaman utama)
     public function index()
     {
-        $categories = ProductCategory::all();
+        $categories = ProductCategory::latest()->get(); // Ambil semua data, urutkan dari yg terbaru
         return view('categories.index', compact('categories'));
     }
 
-    /**
-     * Menyimpan kategori baru (AJAX JSON response).
-     */
+    // Method untuk menampilkan halaman form tambah data
+    public function create()
+    {
+        return view('categories.create');
+    }
+
+    // Method untuk menyimpan data baru ke database
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'product_category_name' => 'required|string|max:191|unique:category_product,product_category_name',
+        // Validasi input
+        $request->validate([
+            'product_category_name' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
 
-        try {
-            $category = ProductCategory::create($validated);
+        // Simpan data baru
+        ProductCategory::create($request->all());
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Kategori baru berhasil ditambahkan!',
-                'data' => $category,
-            ], 201);
-        } catch (Exception $e) {
-            Log::error('Gagal menyimpan kategori', ['error' => $e->getMessage()]);
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal menyimpan kategori. Periksa struktur tabel atau model.',
-                'error_detail' => $e->getMessage(),
-            ], 500);
-        }
+        // Alihkan kembali ke halaman utama dengan pesan sukses
+        return redirect()->route('categories.index')->with('success', 'Kategori baru berhasil ditambahkan!');
     }
 
-    /**
-     * Update kategori berdasarkan ID.
-     */
-    public function update(Request $request, $id)
+    // Method untuk menampilkan detail satu kategori (view)
+    public function show(ProductCategory $category)
     {
-        $validated = $request->validate([
-            'product_category_name' => 'required|string|max:191|unique:category_product,product_category_name,' . $id,
+        return view('categories.show', compact('category'));
+    }
+
+    // Method untuk menampilkan halaman form edit data
+    public function edit(ProductCategory $category)
+    {
+        return view('categories.edit', compact('category'));
+    }
+
+    // Method untuk memperbarui data di database
+    public function update(Request $request, ProductCategory $category)
+    {
+        // Validasi input
+        $request->validate([
+            'product_category_name' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
 
-        try {
-            $category = ProductCategory::findOrFail($id);
-            $category->update($validated);
+        // Update data yang ada
+        $category->update($request->all());
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Kategori berhasil diperbarui!',
-                'data' => $category,
-            ]);
-        } catch (Exception $e) {
-            Log::error('Gagal update kategori', ['error' => $e->getMessage()]);
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal memperbarui kategori.',
-                'error_detail' => $e->getMessage(),
-            ], 500);
-        }
+        // Alihkan kembali ke halaman utama dengan pesan sukses
+        return redirect()->route('categories.index')->with('success', 'Kategori berhasil diperbarui!');
     }
 
-    /**
-     * Hapus kategori.
-     */
-    public function destroy($id)
+    // Method untuk menghapus data
+    public function destroy(ProductCategory $category)
     {
-        try {
-            $category = ProductCategory::findOrFail($id);
-            $category->delete();
+        $category->delete();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Kategori berhasil dihapus!',
-            ]);
-        } catch (Exception $e) {
-            Log::error('Gagal menghapus kategori', ['error' => $e->getMessage()]);
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal menghapus kategori.',
-                'error_detail' => $e->getMessage(),
-            ], 500);
-        }
+        return redirect()->route('categories.index')->with('success', 'Kategori berhasil dihapus!');
     }
 }

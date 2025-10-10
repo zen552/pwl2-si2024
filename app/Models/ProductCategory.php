@@ -9,8 +9,10 @@ class ProductCategory extends Model
 {
     use HasFactory;
 
-     protected $table = 'category_product'; // pastikan nama tabel benar
+    // Menentukan nama tabelnya secara manual
+    protected $table = 'category_product';
 
+    // Kolom yang boleh diisi
     protected $fillable = [
         'product_category_name',
         'description',

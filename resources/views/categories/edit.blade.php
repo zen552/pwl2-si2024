@@ -1,27 +1,27 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Edit Kategori Produk: {{ $category->name }}</h1>
-    <a href="{{ route('categories.index') }}" class="btn btn-secondary">Kembali</a>
-    <hr>
+<h2>Edit Kategori Produk</h2>
 
-    <form action="{{ route('categories.update', $category->id) }}" method="POST">
-        @csrf
-        @method('PUT') {{-- Menggunakan method PUT/PATCH untuk operasi update --}}
-        
-        <div class="form-group">
-            <label for="name">Nama Kategori</label>
-            <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $category->name) }}" required>
-            @error('name')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
-        
-        <div class="form-group">
-            <label for="description">Deskripsi</label>
-            <textarea name="description" id="description" class="form-control">{{ old('description', $category->description) }}</textarea>
-        </div>
-        
-        <button type="submit" class="btn btn-success mt-3">✅ Perbarui Kategori</button>
-    </form>
+<form action="{{ route('categories.update', $category->id) }}" method="POST">
+    @csrf
+    @method('PUT')
+    <div class="form-group mb-3">
+        <label class="font-weight-bold">Nama Kategori</label>
+        <input type="text" class="form-control @error('product_category_name') is-invalid @enderror"
+            name="product_category_name" value="{{ old('product_category_name', $category->product_category_name) }}" placeholder="Masukkan Nama Kategori">
+        @error('product_category_name')
+        <div class="alert alert-danger mt-2">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="form-group mb-3">
+        <label class="font-weight-bold">Deskripsi</label>
+        <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="5" placeholder="Masukkan Deskripsi">{{ old('description', $category->description) }}</textarea>
+        @error('description')
+        <div class="alert alert-danger mt-2">{{ $message }}</div>
+        @enderror
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a href="{{ route('categories.index') }}" class="btn btn-secondary">Kembali</a>
+</form>
 @endsection
