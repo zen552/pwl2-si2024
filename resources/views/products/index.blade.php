@@ -1,107 +1,89 @@
 @extends('layouts.app')
+@section('judulHalaman', 'Manajemen Produk')
 
-@section('content')
-<div class="container mt-4">
-    <h3 class="text-center my-4">Daftar Products</h3>
-    <hr>
-
-    <div class="card border-0 shadow-sm rounded">
-        <div class="card-body">
-            <a href="{{ route('products.create') }}" class="btn btn-md btn-success mb-3">ADD PRODUCT</a>
-
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col">IMAGE</th>
-                        <th scope="col">TITLE</th>
-                        <th scope="col">SUPPLIER</th>
-                        <th scope="col">CATEGORY</th>
-                        <th scope="col">PRICE</th>
-                        <th scope="col">STOCK</th>
-                        <th scope="col" style="width: 20%">ACTION</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($products as $product)
-                        <tr>
-                            <td class="text-center">
-                                <img src="{{ asset('storage/image/'.$product->image) }}" class="rounded" style="width: 150px">
-                            </td>
-                            <td>{{ $product->title }}</td>
-                            <td>{{ $product->supplier_name }}</td>
-                            <td>{{ $product->product_category_name }}</td>
-                            <td>{{ "Rp " . number_format($product->price,2,',','.') }}</td>
-                            <td>{{ $product->stock }}</td>
-                            <td class="text-center">
-                                <form action="{{ route('products.destroy', $product->id) }}" method="POST">
-                                    <a href="{{ route('products.show', $product->id) }}" class="btn btn-sm btn-dark">SHOW</a>
-                                    <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm btn-primary">EDIT</a>
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" class="btn btn-sm btn-danger btn-delete" data-nama="{{ $product->title }}">
-                                        HAPUS
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7" class="text-center">Data Products belum tersedia.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-
-            {{ $products->links() }}
-        </div>
+@section('konten')
+<header class="header">
+    <div>
+        <h1>Manajemen Produk</h1>
+        <p>Kelola semua produk Anda di sini</p>
     </div>
-</div>
-@endsection
+    <a href="{{ route('products.create') }}" class="tombol tombol--utama">Tambah Produk</a>
+</header>
 
-@section('scripts')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    // Notifikasi SweetAlert dari session
-    @if (session('success'))
-        Swal.fire({
-            icon: "success",
-            title: "Berhasil",
-            text: "{{ session('success') }}",
-            showConfirmButton: false,
-            timer: 2000
-        });
-    @elseif(session('error'))
-        Swal.fire({
-            icon: "error",
-            title: "GAGAL!",
-            text: "{{ session('error') }}",
-            showConfirmButton: false,
-            timer: 2000
-        });
+<div class="isi-konten">
+    @if (session('sukses'))
+        <div class="notifikasi">{{ session('sukses') }}</div>
     @endif
 
-    // Konfirmasi hapus data
-    document.querySelectorAll('.btn-delete').forEach(button => {
-        button.addEventListener('click', function (e) {
-            e.preventDefault();
-            let form = this.closest('form');
-            let namaProduk = this.getAttribute('data-nama');
+    <div class="kartu">
+        <h2 class="kartu__judul">Daftar Produk</h2>
 
-            Swal.fire({
-                title: 'Apakah Anda yakin akan menghapus ' + namaProduk + '?',
-                text: "Data produk akan dihapus permanen!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
-            });
-        });
-    });
-</script>
+        <table class="tabel">
+            <thead>
+                <tr>
+                    <th>Gambar</th>
+                    <th>Nama Produk</th>
+                    <th>Deskripsi</th>
+                    <th>Kategori</th>
+                    <th>Stok</th>
+                    <th>Harga</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($products as $produk)
+                    <tr>
+                        <td style="text-align: center;">
+                            {{-- Tampilkan gambar dari folder public/produk --}}
+                            @if($produk->gambar)
+    @php
+        $path = $produk->gambar;
+        // cek apakah path-nya URL atau file lokal
+        $isLocal = !str_starts_with($path, 'http');
+    @endphp
+
+    @if($isLocal)
+        <img src="file:///{{ $path }}" 
+             alt="{{ $produk->nama_produk }}" 
+             width="80" height="80" 
+             style="border-radius: 8px; object-fit: cover; border: 1px solid #ddd;">
+    @else
+        <img src="{{ $path }}" 
+             alt="{{ $produk->nama_produk }}" 
+             width="80" height="80" 
+             style="border-radius: 8px; object-fit: cover; border: 1px solid #ddd;">
+    @endif
+@else
+    <span style="font-size: 0.8em; color: #999;">No Image</span>
+@endif
+
+                        {{-- Deskripsi ditampilkan dengan batasan panjang agar tabel tetap rapi --}}
+                        <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            {{ $produk->deskripsi }}
+                        </td>
+
+                        <td>{{ $produk->kategori->product_category_name ?? 'N/A' }}</td>
+                        <td>{{ $produk->stok }}</td>
+                        <td class="harga">Rp {{ number_format($produk->harga, 0, ',', '.') }}</td>
+
+                        <td>
+                            <div class="grup-tombol-aksi" style="display: flex; gap: 6px;">
+                                <a href="{{ route('products.edit', $produk->id) }}" class="tombol tombol--edit">Edit</a>
+                                <form action="{{ route('products.destroy', $produk->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus produk ini?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="tombol tombol--hapus">Hapus</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="7" style="text-align:center; padding: 2rem;">Belum ada produk.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
 @endsection
