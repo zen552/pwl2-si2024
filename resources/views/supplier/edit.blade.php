@@ -1,28 +1,119 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Supplier</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --warna-utama: #B57F50;
+            --warna-sekunder: #A2B38B;
+            --warna-aksen: #D4AF37;
+            --warna-latar: #FFF8E7;
+            --teks-gelap: #333;
+            --font-utama: 'Nunito Sans', sans-serif;
+            --font-judul: 'Poppins', sans-serif;
+            --bayangan: 0 4px 24px rgba(181, 127, 80, 0.08);
+            --transisi: all 0.3s ease;
+        }
 
-@section('content')
-<h2>Edit Supplier</h2>
+        body {
+            font-family: var(--font-utama);
+            background: var(--warna-latar);
+            color: var(--teks-gelap);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding-top: 3rem;
+        }
 
-<form action="{{ route('suppliers.update', $supplier->id) }}" method="POST">
-    @csrf
-    @method('PUT')
-    <div class="form-group mb-3">
-        <label class="font-weight-bold">Nama supplier</label>
-            <input type="text" class="form-control @error('supplier_name') is-invalid @enderror"
-            name="supplier_name" value="{{ old('supplier_name', $supplier->supplier_name) }}" placeholder="Siapa nama supplier?">
-        @error('supplier_name')
-        <div class="alert alert-danger mt-2">{{ $message }}</div>
-        @enderror
+        .kartu {
+            background: #fff;
+            padding: 2rem 3rem;
+            border-radius: 16px;
+            box-shadow: var(--bayangan);
+            width: 480px;
+        }
+
+        h2 {
+            font-family: var(--font-judul);
+            color: var(--warna-utama);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        label {
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-top: 0.3rem;
+            margin-bottom: 1.2rem;
+            transition: var(--transisi);
+        }
+
+        input:focus {
+            border-color: var(--warna-aksen);
+            outline: none;
+            box-shadow: 0 0 5px rgba(212,175,55,0.3);
+        }
+
+        .tombol {
+            display: inline-block;
+            padding: 0.7rem 1.4rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: var(--transisi);
+        }
+
+        .tombol--utama {
+            background: var(--warna-aksen);
+            color: white;
+            margin-right: 0.5rem;
+        }
+
+        .tombol--utama:hover {
+            background: #c9a63b;
+        }
+
+        .tombol--sekunder {
+            background: #f3f3f3;
+            color: var(--teks-gelap);
+        }
+
+        .tombol--sekunder:hover {
+            background: #e2e2e2;
+        }
+    </style>
+</head>
+<body>
+    <div class="kartu">
+        <h2>Edit Supplier</h2>
+        <form action="{{ route('suppliers.update', $supplier->id) }}" method="POST">
+            @csrf
+            @method('PUT')
+
+            <label>Nama Supplier:</label><br>
+            <input type="text" name="supplier_name" value="{{ $supplier->supplier_name }}" required><br>
+
+            <label>PIC Supplier:</label><br>
+            <input type="text" name="pic_supplier" value="{{ $supplier->pic_supplier }}" required><br>
+
+            <label>No. Telepon:</label><br>
+            <input type="text" name="phone" value="{{ $supplier->phone }}" required><br>
+
+            <button type="submit" class="tombol tombol--utama">Update</button>
+            <a href="{{ route('suppliers.index') }}" class="tombol tombol--sekunder">Kembali</a>
+        </form>
     </div>
-    <div class="form-group mb-3">
-        <label class="font-weight-bold">Nama PIC Supplier</label>
-            <input type="text" class="form-control @error('pic_supplier') is-invalid @enderror"
-            name="pic_supplier" value="{{ old('pic_supplier', $supplier->pic_supplier) }}" placeholder="Siapa PICnya?">
-        @error('pic_supplier')
-        <div class="alert alert-danger mt-2">{{ $message }}</div>
-        @enderror
-    </div>
-    <button type="submit" class="btn btn-primary">Update</button>
-    <a href="{{ route('suppliers.index') }}" class="btn btn-secondary">Kembali</a>
-</form>
-@endsection
+</body>
+</html>

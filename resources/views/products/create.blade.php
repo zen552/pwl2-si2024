@@ -1,84 +1,53 @@
 @extends('layouts.app')
+@section('judulHalaman', 'Tambah Produk Baru')
+@section('konten')
+    {{-- ... (header sama seperti sebelumnya) ... --}}
+     <header class="header">
+        <div><h1>Tambah Produk Baru</h1><p>Isi detail produk di bawah ini</p></div>
+        <a href="{{ route('products.index') }}" class="tombol tombol--sekunder">Kembali</a>
+    </header>
 
-@section('content')
-<div class="container mt-4 mb-4">
-    <h3>Add New Product</h3>
-    <div class="card border-0 shadow-sm rounded">
-        <div class="card-body">
-            <form id="productForm" action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
+    <div class="isi-konten">
+        <div class="kartu">
+            {{-- PENTING: Tambahkan enctype untuk upload file --}}
+            <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-
-                <div class="form-group mb-3">
-                    <label class="font-weight-bold">IMAGE</label>
-                    <input type="file" class="form-control @error('image') is-invalid @enderror" name="image">
+                <div class="grup-formulir">
+                    <label for="gambar">Gambar Produk</label>
+                    <input type="file" id="gambar" name="gambar" class="input-teks @error('gambar') error @enderror" required>
+                    @error('gambar')<div class="pesan-error">{{ $message }}</div>@enderror
                 </div>
-
-                <div class="form-group">
-                    <label for="product_category_id">Kategori</label>
-                    <select name="product_category_id" class="form-control">
-                        <option value="">-- Pilih Kategori --</option>
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->product_category_name }}</option>
-                        @endforeach
-                    </select>
+                <div class="grup-formulir">
+                    <label for="nama_produk">Nama Produk</label>
+                    <input type="text" id="nama_produk" name="nama_produk" class="input-teks @error('nama_produk') error @enderror" value="{{ old('nama_produk') }}" required>
+                    @error('nama_produk')<div class="pesan-error">{{ $message }}</div>@enderror
                 </div>
-
-                <div class="form-group">
-                    <label for="id_supplier">Supplier</label>
-                    <select name="id_supplier" class="form-control">
-                        <option value="">-- Pilih Supplier --</option>
-                        @foreach($suppliers as $supplier)
-                            <option value="{{ $supplier->id }}">{{ $supplier->supplier_name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label class="font-weight-bold">TITLE</label>
-                    <input type="text" class="form-control @error('title') is-invalid @enderror" name="title" placeholder="Masukkan Judul Product">
-                </div>
-
-                <div class="form-group mb-3">
-                    <label class="font-weight-bold">DESCRIPTION</label>
-                    <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="5" placeholder="Masukkan Description Product"></textarea>
-                    @error('description')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group mb-3">
-                            <label class="font-weight-bold">PRICE</label>
-                            <input type="number" class="form-control @error('price') is-invalid @enderror" name="price" placeholder="Masukkan Harga Product">
-                        </div>
+                {{-- ... (sisa form sama seperti sebelumnya) ... --}}
+                <div class="formulir-grid">
+                    <div class="grup-formulir">
+                        <label for="product_category_id">Kategori</label>
+                        <select id="product_category_id" name="product_category_id" class="input-pilihan" required>
+                            <option value="">-- Pilih Kategori --</option>
+                             @foreach($categories as $kategori)
+                                <option value="{{ $kategori->id }}" {{ old('product_category_id') == $kategori->id ? 'selected' : '' }}>
+                                    {{ $kategori->product_category_name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group mb-3">
-                            <label class="font-weight-bold">STOCK</label>
-                            <input type="number" class="form-control @error('stock') is-invalid @enderror" name="stock" placeholder="Masukkan Stock product">
-                        </div>
+                    <div class="grup-formulir">
+                        <label for="stok">Stok</label>
+                        <input type="number" id="stok" name="stok" class="input-angka" value="{{ old('stok', 0) }}" required>
                     </div>
                 </div>
-
-                <button type="submit" class="btn btn-md btn-primary me-3">SAVE</button>
-                <button type="button" id="resetBtn" onclick="resetForm()" class="btn btn-md btn-warning">RESET</button>
+                <div class="grup-formulir">
+                    <label for="harga">Harga (Rp)</label>
+                    <input type="number" id="harga" name="harga" class="input-angka" value="{{ old('harga', 0) }}" required>
+                </div>
+                <div style="text-align: right; margin-top: 1rem;">
+                    <button type="submit" class="tombol tombol--utama">Simpan Produk</button>
+                </div>
             </form>
         </div>
     </div>
-</div>
-@endsection
-
-@section('scripts')
-<script>
-    CKEDITOR.replace('description');
-
-    function resetForm() {
-        document.getElementById("productForm").reset();
-
-        for (var instance in CKEDITOR.instances) {
-            CKEDITOR.instances[instance].setData('');
-        }
-    }
-</script>
 @endsection
