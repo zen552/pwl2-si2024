@@ -23,14 +23,6 @@ class SupplierSeeder extends Seeder
         $suppliers = [
             [
                 'id' => 111,
-                'supplier_name' => 'PT Mars Symbioscience Indonesia',
-                'photo' => NULL,
-                'pic_supplier' => 'Raiden',
-                'created_at' => '2025-10-10 03:42:54',
-                'updated_at' => '2025-10-10 18:52:16',
-            ],
-            [
-                'id' => 112,
                 'supplier_name' => 'PT Sinar Jaya Agung',
                 'photo' => NULL,
                 'pic_supplier' => 'Alvin',
@@ -38,20 +30,28 @@ class SupplierSeeder extends Seeder
                 'updated_at' => '2025-10-10 18:51:12',
             ],
             [
-                'id' => 117,
-                'supplier_name' => 'PT Petshop',
-                'photo' => NULL,
-                'pic_supplier' => 'Vanessa',
-                'created_at' => '2025-10-09 11:12:27',
-                'updated_at' => '2025-10-10 18:52:46',
-            ],
-            [
-                'id' => 118,
+                'id' => 112,
                 'supplier_name' => 'PT Cahaya Indah',
                 'photo' => NULL,
                 'pic_supplier' => 'Gilberth',
                 'created_at' => '2025-10-10 08:00:44',
                 'updated_at' => '2025-10-10 18:53:53',
+            ],
+            [
+                'id' => 113,
+                'supplier_name' => 'PT Mars Symbioscience Indonesia',
+                'photo' => NULL,
+                'pic_supplier' => 'Raiden',
+                'created_at' => '2025-10-10 03:42:54',
+                'updated_at' => '2025-10-10 18:52:16',
+            ],
+                        [
+                'id' => 114,
+                'supplier_name' => 'PT Petshop',
+                'photo' => NULL,
+                'pic_supplier' => 'Vanessa',
+                'created_at' => '2025-10-09 11:12:27',
+                'updated_at' => '2025-10-10 18:52:46',
             ],
         ];
 
