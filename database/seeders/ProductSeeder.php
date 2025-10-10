@@ -23,7 +23,6 @@ class ProductSeeder extends Seeder
         $products = [
             [
                 'id' => 2,
-                'gambar' => NULL,
                 'product_category_id' => 1,
                 'supplier_id' => 111,
                 'image' => NULL,
@@ -36,7 +35,6 @@ class ProductSeeder extends Seeder
             ],
             [
                 'id' => 3,
-                'gambar' => NULL,
                 'product_category_id' => 2,
                 'supplier_id' => 112,
                 'image' => NULL,
@@ -49,7 +47,6 @@ class ProductSeeder extends Seeder
             ],
             [
                 'id' => 4,
-                'gambar' => NULL,
                 'product_category_id' => 2,
                 'supplier_id' => 117,
                 'image' => NULL,
@@ -62,7 +59,6 @@ class ProductSeeder extends Seeder
             ],
             [
                 'id' => 5,
-                'gambar' => NULL,
                 'product_category_id' => 3,
                 'supplier_id' => 110,
                 'image' => NULL,
