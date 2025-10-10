@@ -24,11 +24,11 @@ return new class extends Migration
             $table->foreign('id_transaksi_penjualan')
                   ->references('id')
                   ->on('transaksi_penjualan')
-                  ->onDelete('cascade'); // Jika transaksi induk dihapus, detail ikut terhapus
+                  ->onDelete('cascade');
 
             $table->foreign('id_product')
                   ->references('id')
-                  ->on('products') // Asumsi nama tabel produk adalah 'products'
+                  ->on('products') 
                   ->onDelete('restrict'); // Mencegah produk dihapus jika sudah ada di transaksi
 
         });
