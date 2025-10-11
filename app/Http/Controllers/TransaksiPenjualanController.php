@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\TransaksiPenjualan;
-use App\Models\Product; // Asumsi Anda punya model Product
+use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB; // Untuk database transaction
+use Illuminate\Support\Facades\DB;
 
 class TransaksiPenjualanController extends Controller
 {
@@ -14,11 +14,9 @@ class TransaksiPenjualanController extends Controller
      */
     public function index()
     {
-        // Mengambil semua data transaksi beserta detailnya (Eager Loading)
-        // with('details.product') -> ambil relasi 'details', dan di dalam 'details' ambil relasi 'product'
         $transaksis = TransaksiPenjualan::with('details.product')->latest()->paginate(10);
         
-        // Mengirim data ke view (Anda perlu membuat file view ini)
+        // Mengirim data ke view
         return view('transaksi.index', compact('transaksis'));
     }
 
@@ -45,9 +43,6 @@ class TransaksiPenjualanController extends Controller
             'products.*.jumlah' => 'required|integer|min:1',
         ]);
 
-        // =================================================================
-        // 1. Lakukan Pengecekan Stok & Kalkulasi Total SEBELUM ke Database
-        // =================================================================
         $grandTotal = 0;
         $itemsToProcess = [];
 
@@ -73,19 +68,16 @@ class TransaksiPenjualanController extends Controller
             ];
         }
 
-        // =================================================================
-        // 2. Gunakan DB Transaction (Closure-based lebih ringkas & aman)
-        // =================================================================
         try {
             DB::transaction(function () use ($request, $grandTotal, $itemsToProcess) {
-                // A. Simpan data transaksi utama dengan total harga
+                // Simpan data transaksi utama dengan total harga
                 $transaksi = TransaksiPenjualan::create([
                     'nama_kasir' => $request->nama_kasir,
                     'email_pembeli' => $request->email_pembeli,
                     'total_harga' => $grandTotal, // Simpan total harga
                 ]);
 
-                // B. Simpan detail transaksi dan kurangi stok
+                // Simpan detail transaksi dan kurangi stok
                 foreach ($itemsToProcess as $item) {
                     $transaksi->details()->create([
                         'id_product' => $item['product']->id,
@@ -94,7 +86,7 @@ class TransaksiPenjualanController extends Controller
                         'subtotal' => $item['subtotal'], // Simpan subtotal
                     ]);
 
-                    // C. Kurangi stok produk dengan metode yang lebih aman
+                    // Kurangi stok produk dengan metode yang lebih aman
                     $item['product']->decrement('stock', $item['jumlah']);
                 }
             });
@@ -113,16 +105,13 @@ class TransaksiPenjualanController extends Controller
      */
     public function show(TransaksiPenjualan $transaksi)
     {
-    // Eager load relasi untuk efisiensi
-    $transaksi->load('details.product');
-    return view('transaksi.show', compact('transaksi'));
+        // Eager load relasi untuk efisiensi
+        $transaksi->load('details.product');
+        return view('transaksi.show', compact('transaksi'));
     }
     
     /**
      * UPDATE (FORM): Menampilkan form untuk mengedit transaksi.
-     * (Catatan: Mengedit transaksi yang sudah jadi biasanya kompleks,
-     * seringkali yang diizinkan hanya update status, bukan item.
-     * Contoh ini adalah simplified update)
      */
     public function edit(TransaksiPenjualan $transaksi)
     {
@@ -137,16 +126,7 @@ class TransaksiPenjualanController extends Controller
      * UPDATE (ACTION): Memperbarui data transaksi di database.
      */
     public function update(Request $request, TransaksiPenjualan $transaksi)
-    {
-        // Logika update bisa mirip dengan store:
-        // 1. Validasi
-        // 2. Mulai DB Transaction
-        // 3. Update data utama transaksi
-        // 4. Hapus detail lama, buat detail baru (atau logika yang lebih kompleks)
-        // 5. Kembalikan stok lama, kurangi stok baru
-        // 6. Commit atau Rollback
-        // (Untuk saat ini kita skip implementasi detailnya karena sangat bergantung pada business logic)
-        
+    {        
         $request->validate([
             'nama_kasir' => 'required|string|max:50',
             'email_pembeli' => 'nullable|email',
@@ -166,7 +146,7 @@ class TransaksiPenjualanController extends Controller
             foreach($transaksi->details as $detail) {
                 Product::find($detail->id_product)->increment('stock', $detail->jumlah_pembelian);
             }
-            $transaksi->delete(); // Ini akan otomatis menghapus detailnya karena onDelete('cascade')
+            $transaksi->delete();
         });
         
         return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil dihapus.');

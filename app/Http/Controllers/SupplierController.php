@@ -27,7 +27,6 @@ class SupplierController extends Controller
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
 
-        // Buat dulu objek supplier
         $supplier = new Supplier();
         $supplier->supplier_name = $request->supplier_name;
         $supplier->pic_supplier = $request->pic_supplier;
@@ -38,7 +37,7 @@ class SupplierController extends Controller
             $supplier->photo = $photoPath;
         }
 
-        // Simpan ke dat    abase
+        // Simpan ke database
         $supplier->save();
 
 
