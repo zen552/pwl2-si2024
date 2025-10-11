@@ -44,7 +44,6 @@ class DetailTransaksiPenjualan extends Model
      */
     public function product()
     {
-        // Pastikan Anda sudah punya model Product
         return $this->belongsTo(Product::class, 'id_product');
     }
 }
