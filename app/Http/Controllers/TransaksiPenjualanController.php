@@ -162,16 +162,13 @@ class TransaksiPenjualanController extends Controller
      */
     public function destroy(TransaksiPenjualan $transaksi)
     {
-        // Logika untuk mengembalikan stok produk sebelum menghapus
-        // DB::transaction(function() use ($transaksi) {
-        //     foreach($transaksi->details as $detail) {
-        //         Product::find($detail->id_product)->increment('stock', $detail->jumlah_pembelian);
-        //     }
-        //     $transaksi->delete(); // Ini akan otomatis menghapus detailnya karena onDelete('cascade')
-        // });
+        DB::transaction(function() use ($transaksi) {
+            foreach($transaksi->details as $detail) {
+                Product::find($detail->id_product)->increment('stock', $detail->jumlah_pembelian);
+            }
+            $transaksi->delete(); // Ini akan otomatis menghapus detailnya karena onDelete('cascade')
+        });
         
-        $transaksi->delete();
-
         return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil dihapus.');
     }
 }
