@@ -145,10 +145,10 @@
                             <a href="{{ route('transaksi.show', $transaksi->id) }}" class="tombol tombol--lihat">Lihat</a>
                             <a href="{{ route('transaksi.edit', $transaksi->id) }}" class="tombol tombol--edit">Edit</a>
                             <form action="{{ route('transaksi.destroy', $transaksi->id) }}" method="POST">
-    @csrf
-    @method('DELETE')
-    <button type="submit" class="tombol tombol--hapus">Hapus</button>
-</form>
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="tombol tombol--hapus">Hapus</button>
+                            </form>
 
                         </div>
                     </td>
