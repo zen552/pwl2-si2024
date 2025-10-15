@@ -8,11 +8,12 @@ use Illuminate\Support\Facades\Storage;
 
 class SupplierController extends Controller
 {
-    public function index()
-    {
-        $suppliers = Supplier::all();
-        return view('supplier.index', compact('suppliers'));
-    }
+   public function index()
+{
+    $suppliers = Supplier::paginate(4); 
+    return view('supplier.index', compact('suppliers'));
+}
+
 
     public function create()
     {
@@ -31,13 +32,12 @@ class SupplierController extends Controller
         $supplier->supplier_name = $request->supplier_name;
         $supplier->pic_supplier = $request->pic_supplier;
 
-        // Cek apakah ada file foto
+       
         if ($request->hasFile('photo')) {
             $photoPath = $request->file('photo')->store('suppliers', 'public');
             $supplier->photo = $photoPath;
         }
 
-        // Simpan ke database
         $supplier->save();
 
 
@@ -66,18 +66,18 @@ class SupplierController extends Controller
 
         ]);
 
-        // Update field teks
+        
         $supplier->supplier_name = $request->supplier_name;
         $supplier->pic_supplier = $request->pic_supplier;
 
-        // Jika ada foto baru diupload
+        
         if ($request->hasFile('photo')) {
-            // Hapus foto lama dari storage jika ada
+           
             if ($supplier->photo && Storage::disk('public')->exists($supplier->photo)) {
                 Storage::disk('public')->delete($supplier->photo);
             }
 
-            // Simpan foto baru di folder storage/app/public/suppliers
+         
             $photoPath = $request->file('photo')->store('suppliers', 'public');
             $supplier->photo = $photoPath;
         }

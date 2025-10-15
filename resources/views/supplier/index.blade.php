@@ -135,6 +135,11 @@
         </tbody>
     </table>
 </div>
+<div class="d-flex justify-content-center align-items-center mt-4 mb-3">
+    <nav aria-label="Page navigation">
+        {{ $suppliers->links('pagination::bootstrap-5') }}
+    </nav>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {

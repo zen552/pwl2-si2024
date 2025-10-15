@@ -123,6 +123,34 @@
             .sidebar { display: none; }
             .content { margin-left: 0; }
         }
+        .d-flex .pagination {
+    margin-left: 12px; 
+}
+           .pagination .page-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 38px;
+            width: 38px;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            color: #6b4b23;
+            line-height: normal;
+            padding: 0;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #d8b04c;
+            color: white;
+            border-color: #d8b04c;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            background-color: #f2f2f2;
+            color: #c0c0c0;
+            border: none;
+        }
     </style>
 </head>
 

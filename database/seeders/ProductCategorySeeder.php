@@ -10,7 +10,7 @@ class ProductCategorySeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Bersihkan tabel yang benar sebelum seeding
+        // 1. Bersihkan tabel awal
         ProductCategory::truncate(); 
 
         $categories = [

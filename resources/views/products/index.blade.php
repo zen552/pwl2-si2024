@@ -56,6 +56,8 @@
 }
     .tombol--edit { background: rgba(212, 175, 55, 0.1); color: var(--warna-aksen); }
     .tombol--hapus { background: rgba(220, 53, 69, 0.1); color: var(--warna-bahaya); }
+    /* container already pake bootstrap util, tapi pastikan pagination tanpa top margin */
+
 </style>
 
 <header class="header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
@@ -110,6 +112,12 @@
         </tbody>
     </table>
 </div>
+<div class="d-flex justify-content-center align-items-center mt-4 mb-3">
+    <nav aria-label="Page navigation">
+        {{ $products->links('pagination::bootstrap-5') }}
+    </nav>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {

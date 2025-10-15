@@ -9,10 +9,8 @@ class Supplier extends Model
 {
     use HasFactory;
 
-    // Sesuaikan dengan nama tabel di database
     protected $table = 'supplier';
 
-    // Kolom yang boleh diisi melalui mass assignment
     protected $fillable = [
         'supplier_name',
         'pic_supplier',

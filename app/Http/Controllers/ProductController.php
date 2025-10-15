@@ -10,16 +10,15 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 
+
 class ProductController extends Controller
 {
-    /** Tampilkan semua produk */
     public function index(): View
     {
-        $products = (new Product)->get_product()->latest()->paginate(10);
+        $products = (new Product)->get_product()->latest()->paginate(4);
         return view('products.index', compact('products'));
     }
 
-    /** Tampilkan form tambah produk */
     public function create(): View
     {
         $categories = ProductCategory::all();
@@ -27,7 +26,6 @@ class ProductController extends Controller
         return view('products.create', compact('categories', 'suppliers'));
     }
 
-    /** Simpan produk baru */
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -49,14 +47,12 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('error', 'Gagal mengunggah gambar.');
     }
 
-    /** Tampilkan detail produk */
     public function show(string $id): View
     {
         $product = (new Product)->get_product()->where('products.id', $id)->firstOrFail();
         return view('products.show', compact('product'));
     }
 
-    /** Tampilkan form edit produk */
     public function edit(string $id): View
     {
         $product = Product::findOrFail($id);
@@ -66,7 +62,6 @@ class ProductController extends Controller
         return view('products.edit', compact('product', 'categories', 'suppliers'));
     }
 
-    /** Update data produk */
     public function update(Request $request, $id): RedirectResponse
     {
         $request->validate([
@@ -105,7 +100,6 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('success', 'Data berhasil diubah!');
     }
 
-    /** Hapus produk */
     public function destroy($id): RedirectResponse
     {
         $productModel = new Product;
