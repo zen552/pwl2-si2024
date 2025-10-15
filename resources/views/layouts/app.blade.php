@@ -45,12 +45,12 @@
             padding: 2rem 0;
             box-shadow: var(--bayangan);
         }
-.logo-img {
-    width: 110px;
-    height: auto;
-    margin-top: 1rem;
-    border-radius: 12px; /* bisa diganti 50% kalau mau bulat */
-}
+        .logo-img {
+            width: 110px;
+            height: auto;
+            margin-top: 1rem;
+            border-radius: 12px; /* bisa diganti 50% kalau mau bulat */
+        }
 
         .sidebar .logo {
             text-align: center;
@@ -130,9 +130,9 @@
             .content { margin-left: 0; }
         }
         .d-flex .pagination {
-    margin-left: 12px; 
-}
-           .pagination .page-link {
+            margin-left: 12px; 
+        }
+        .pagination .page-link {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -166,7 +166,7 @@
         <div class="logo">
             <h4>Pawfect</h4>
             <p>Manajemen Sistem</p>
-         <img src="{{ asset('storage/image/pawfect-logo.png') }}" alt="Logo Pawfect" class="logo-img">
+         <img src="{{ asset('storage/logo/pawfect-logo.png') }}" alt="Logo Pawfect" class="logo-img">
 
         </div>
 
