@@ -10,7 +10,7 @@
         </div>
     </div>
 
-    <div class="kartu-form" x-data="transactionForm()">
+    <div class="kartu-form">
         <form action="{{ route('transaksi.store') }}" method="POST">
             @csrf
 
@@ -92,18 +92,6 @@
         </form>
     </div>
 </div>
-
-<script>
-    function transactionForm() {
-        return {
-            items: [{}],
-            addItem() { this.items.push({}); },
-            removeItem(index) {
-                if (this.items.length > 1) this.items.splice(index, 1);
-            }
-        }
-    }
-</script>
 
 <script>
 let index = 1;
