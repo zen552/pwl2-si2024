@@ -45,6 +45,12 @@
             padding: 2rem 0;
             box-shadow: var(--bayangan);
         }
+.logo-img {
+    width: 110px;
+    height: auto;
+    margin-top: 1rem;
+    border-radius: 12px; /* bisa diganti 50% kalau mau bulat */
+}
 
         .sidebar .logo {
             text-align: center;
@@ -160,6 +166,8 @@
         <div class="logo">
             <h4>Pawfect</h4>
             <p>Manajemen Sistem</p>
+         <img src="{{ asset('storage/image/pawfect-logo.png') }}" alt="Logo Pawfect" class="logo-img">
+
         </div>
 
         <a href="{{ url('/products') }}" class="{{ request()->is('products*') ? 'active' : '' }}">
