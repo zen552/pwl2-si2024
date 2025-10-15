@@ -14,6 +14,13 @@
         <form action="{{ route('transaksi.store') }}" method="POST">
             @csrf
 
+            {{-- Pesan error dari session --}}
+            @if (session('error'))
+                <div class="alert alert-danger" style="margin-bottom: 1rem; color: #dc3545;">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             {{-- Informasi Kasir & Pembeli --}}
             <div class="formulir-grid">
                 <div class="grup-formulir">
