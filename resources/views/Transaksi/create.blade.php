@@ -2,8 +2,6 @@
 @section('judulHalaman', 'Buat Transaksi Baru')
 
 @section('content')
-<script src="//unpkg.com/alpinejs" defer></script>
-
 <div class="halaman-penuh">
     <div class="header-tambah">
         <div>
@@ -45,7 +43,7 @@
             {{-- Detail Produk --}}
             <h3 style="color:#8B5E3C; margin-bottom:1rem;">Detail Produk</h3>
 
-            <table class="tabel-produk">
+            <table class="tabel-produk" id="tabel-produk">
                 <thead>
                     <tr>
                         <th>Produk</th>
@@ -53,37 +51,30 @@
                         <th>Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <template x-for="(item, index) in items" :key="index">
-                        <tr>
-                            <td>
-                                <select :name="`products[${index}][id]`" required>
-                                    <option value="">-- Pilih Produk --</option>
-                                    @foreach ($products as $product)
-                                        <option value="{{ $product->id }}">
-                                            {{ $product->title }} (Stok: {{ $product->stock }})
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td>
-                                <input 
-                                    type="number" 
-                                    :name="`products[${index}][jumlah]`" 
-                                    min="1" 
-                                    value="1" 
-                                    required>
-                            </td>
-                            <td class="aksi-cell">
-                                <button type="button" class="tombol tombol--hapus" @click="removeItem(index)">Hapus</button>
-                            </td>
-                        </tr>
-                    </template>
+                <tbody id="produk-body">
+                    <tr>
+                        <td>
+                            <select name="products[0][id]" required>
+                                <option value="">-- Pilih Produk --</option>
+                                @foreach ($products as $product)
+                                    <option value="{{ $product->id }}">
+                                        {{ $product->title }} (Stok: {{ $product->stock }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" name="products[0][jumlah]" min="1" value="1" required>
+                        </td>
+                        <td class="aksi-cell">
+                            <button type="button" class="tombol tombol--hapus" onclick="hapusBaris(this)">Hapus</button>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
 
             <div class="tambah-produk">
-                <button type="button" class="tombol tombol--utama" style="background-color:#A2B38B;" @click="addItem()">+ Tambah Produk</button>
+                <button type="button" class="tombol tombol--utama" style="background-color:#A2B38B;" onclick="tambahBaris()">+ Tambah Produk</button>
             </div>
 
             {{-- Tombol Aksi --}}
@@ -105,6 +96,43 @@
             }
         }
     }
+</script>
+
+<script>
+let index = 1;
+
+function tambahBaris() {
+    const tbody = document.getElementById('produk-body');
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td>
+            <select name="products[${index}][id]" required>
+                <option value="">-- Pilih Produk --</option>
+                @foreach ($products as $product)
+                    <option value="{{ $product->id }}">
+                        {{ $product->title }} (Stok: {{ $product->stock }})
+                    </option>
+                @endforeach
+            </select>
+        </td>
+        <td>
+            <input type="number" name="products[${index}][jumlah]" min="1" value="1" required>
+        </td>
+        <td class="aksi-cell">
+            <button type="button" class="tombol tombol--hapus" onclick="hapusBaris(this)">Hapus</button>
+        </td>
+    `;
+    tbody.appendChild(row);
+    index++;
+}
+
+function hapusBaris(button) {
+    const row = button.closest('tr');
+    const tbody = document.getElementById('produk-body');
+    if (tbody.rows.length > 1) {
+        row.remove();
+    }
+}
 </script>
 
 <style>
