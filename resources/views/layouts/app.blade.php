@@ -166,7 +166,7 @@
         <div class="logo">
             <h4>Pawfect</h4>
             <p>Manajemen Sistem</p>
-         <img src="{{ asset('storage/logo/pawfect-logo.png') }}" alt="Logo Pawfect" class="logo-img">
+         <img src="{{ asset('storage/image/pawfect-logo.png') }}" alt="Logo Pawfect" class="logo-img">
 
         </div>
 
