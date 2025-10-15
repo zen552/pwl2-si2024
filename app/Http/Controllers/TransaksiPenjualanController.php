@@ -12,7 +12,7 @@ class TransaksiPenjualanController extends Controller
   
     public function index()
     {
-        $transaksi = TransaksiPenjualan::with('details.product')->latest()->paginate(4);
+        $transaksis = TransaksiPenjualan::with('details.product')->latest()->paginate(4);
        
         return view('transaksi.index', compact('transaksis'));
     }
