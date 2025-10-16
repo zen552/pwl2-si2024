@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\Storage;
 class SupplierController extends Controller
 {
    public function index()
-{
+    {
     $suppliers = Supplier::paginate(4); 
     return view('supplier.index', compact('suppliers'));
-}
+    }
 
 
     public function create()
