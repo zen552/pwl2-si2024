@@ -98,6 +98,7 @@
                         <a href="{{ route('products.show', $product->id) }}" class="tombol tombol--lihat">Lihat</a>
                             <a href="{{ route('products.edit', $product->id) }}" class="tombol tombol--edit">Edit</a>
                             <form action="{{ route('products.destroy', $product->id) }}" method="POST">
+                                @csrf
                                 @method('DELETE')
                                 <button type="submit" class="tombol tombol--hapus">Hapus</button>
                             </form>
