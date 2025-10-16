@@ -9,6 +9,7 @@ use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 
 class ProductController extends Controller
@@ -106,8 +107,10 @@ class ProductController extends Controller
         $product = $productModel->get_product()->where('products.id', $id)->firstOrFail();
 
         Storage::disk('public')->delete('image/' . $product->image);
-        $product->delete();
-
+        DB::transaction(function() use ($product) {
+            $product->detailTransaksiPenjualan()->delete(); // pastikan relasi sudah ada di model Product
+            $product->delete();
+        });
         return redirect()->route('products.index')->with('success', 'Data berhasil dihapus!');
     }
 }

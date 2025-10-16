@@ -81,4 +81,10 @@ public function category()
 {
     return $this->belongsTo(ProductCategory::class, 'product_category_id');
 }
+
+public function detailTransaksiPenjualan()
+{
+    return $this->hasMany(DetailTransaksiPenjualan::class, 'id_product');
+}
+
 }
