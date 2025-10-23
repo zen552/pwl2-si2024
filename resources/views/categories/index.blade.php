@@ -103,10 +103,10 @@
                         <a href="{{ route('categories.show', $category->id) }}" class="tombol tombol--lihat">Lihat</a>
                         <a href="{{ route('categories.edit', $category->id) }}" class="tombol tombol--edit">Edit</a>
                         <form action="{{ route('categories.destroy', $category->id) }}" method="POST">
-    @csrf
-    @method('DELETE')
-    <button type="submit" class="tombol tombol--hapus">Hapus</button>
-</form>
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="tombol tombol--hapus">Hapus</button>
+                        </form>
                     </div>
                 </td>
             </tr>

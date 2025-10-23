@@ -81,6 +81,23 @@
             transform: translateX(5px);
         }
 
+        .sidebar form {
+            background-color: rgba(255,0,0, 0.15);
+            color: var(--teks-terang);
+            display: block;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            margin: 0.3rem 1rem;
+            border-radius: 12px;
+            transition: var(--transisi);
+        }
+
+        .sidebar form:hover,
+        .sidebar form.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: translateX(5px);
+        }
+        
         /* KONTEN UTAMA */
         .content {
             margin-left: 250px;
@@ -182,6 +199,12 @@
         <a href="{{ url('/transaksi') }}" class="{{ request()->is('transaksi*') ? 'active' : '' }}">
             <i class="bi bi-cash-stack"></i> Transaksi
         </a>
+        <form action="{{ route('logout') }}" method="POST" >
+            @csrf
+            <button type="submit" class="dropdown-item text-danger">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </button>
+        </form>
     </div>
 
     <!-- KONTEN -->
