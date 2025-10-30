@@ -20,6 +20,8 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 Route::get('/register', [AuthController::class, 'registerForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.process');
 
+ROute::get('/send-email/{to}/{Id}', [\App\Http\Controllers\TransaksiPenjualanController::class, 'sendEmail']);
+
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {

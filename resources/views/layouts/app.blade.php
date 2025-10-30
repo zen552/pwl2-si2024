@@ -82,7 +82,7 @@
         }
 
         .sidebar form {
-            background-color: rgba(255,0,0, 0.15);
+            background-color: rgba(172, 12, 12, 0.79);
             color: var(--teks-terang);
             display: block;
             text-decoration: none;

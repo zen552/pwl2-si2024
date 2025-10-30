@@ -6,6 +6,7 @@ use App\Models\TransaksiPenjualan;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class TransaksiPenjualanController extends Controller
 {
@@ -57,8 +58,8 @@ class TransaksiPenjualanController extends Controller
             ];
         }
 
-        try {
-            DB::transaction(function () use ($request, $grandTotal, $itemsToProcess) {
+        try {            
+            $transaksi = DB::transaction(function () use ($request, $grandTotal, $itemsToProcess) {
                 
                 $transaksi = TransaksiPenjualan::create([
                     'nama_kasir' => $request->nama_kasir,
@@ -77,7 +78,13 @@ class TransaksiPenjualanController extends Controller
                     
                     $item['product']->decrement('stock', $item['jumlah']);
                 }
+
+                return $transaksi;
             });
+
+            if ($request->email_pembeli) {
+                $this->sendEmail($request->email_pembeli, $transaksi->id);
+            }
 
             return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil dibuat.');
 
@@ -114,6 +121,10 @@ class TransaksiPenjualanController extends Controller
 
         $transaksi->update($request->only(['nama_kasir', 'email_pembeli']));
 
+        if ($request->email_pembeli) {
+            $this->sendEmail($request->email_pembeli, $transaksi->id);
+        }
+
         return redirect()->route('transaksi.index')->with('success', 'Data kasir berhasil diupdate.');
     }
 
@@ -128,5 +139,31 @@ class TransaksiPenjualanController extends Controller
         });
         
         return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil dihapus.');
+    }
+
+    public function sendEmail($to, $id)
+    {
+        //get transaksi by ID
+        $transaksi_penjualan = TransaksiPenjualan::with('details.product')->findOrFail($id);
+        $data = $transaksi_penjualan->get_transaksi_penjualan_detail()->where("transaksi_penjualan.id", $id)->get();
+
+        $total_harga['transaksi'] = 0;
+        foreach ($data as $key => $value) {
+            $total_harga['transaksi'] = $total_harga['transaksi'] + $value['total_harga'];
+        }
+
+        $transaksi_ = [
+            'transaksi' => $transaksi_penjualan,
+            'data' => $data,
+            'total_harga' => $total_harga
+        ];
+
+        //mengirim email
+        Mail::send('transaksi.email', $transaksi_, function ($message) use ($to, $data, $total_harga) {
+            $message->to($to)
+                    ->subject("Transaksi Details: {$data[0]['email_pembeli']} - dengan Total tagihan RP ".number_format($total_harga['transaksi'], 2, ',', '.').".");
+        });
+
+        return response()->json(['message' => 'Email sent successfully!']);
     }
 }
