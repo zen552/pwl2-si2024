@@ -14,6 +14,17 @@ class SupplierController extends Controller
     return view('supplier.index', compact('suppliers'));
     }
 
+    public function lihat()
+    {
+        return Supplier::all();
+    }
+
+    public function lihat_byid($id)
+    {
+        $supplier = Supplier::find($id);
+        if (!$supplier) return response()->json(['message' => 'Supplier not found'], 404);
+        return $supplier;
+    }
 
     public function create()
     {

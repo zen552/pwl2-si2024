@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Supplier;
+use App\Http\Controllers\UserController;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -18,6 +19,18 @@ class ProductController extends Controller
     {
         $products = (new Product)->get_product()->latest()->paginate(4);
         return view('products.index', compact('products'));
+    }
+
+    public function lihat()
+    {
+        return Product::all();
+    }
+
+    public function lihat_byid($id)
+    {
+        $product = Product::find($id);
+        if (!$product) return response()->json(['message' => 'Product not found'], 404);
+        return $product;
     }
 
     public function create(): View
