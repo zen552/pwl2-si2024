@@ -23,7 +23,10 @@ class ProductController extends Controller
 
     public function lihat()
     {
-        return Product::all();
+        // Memerintahkan Laravel untuk mengambil 'product' BESERTA 'category' dan 'supplier'
+        $products = Product::with(['category', 'supplier'])->get(); 
+        
+        return response()->json($products);
     }
 
     public function lihat_byid($id)
