@@ -72,7 +72,7 @@ class Product extends Model
         }
     }
 
-    public function supplier()
+public function supplier()
 {
     return $this->belongsTo(Supplier::class, 'supplier_id');
 }
