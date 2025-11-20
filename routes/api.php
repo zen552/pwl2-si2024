@@ -9,6 +9,10 @@ use App\Http\Controllers\SupplierController;
 Route::prefix('products')->group(function () {
     Route::get('/lihat', [ProductController::class, 'lihat']);
     Route::get('/lihat/{id}', [ProductController::class, 'lihat_byid']);
+    Route::post('/tambah', [ProductController::class, 'tambah']);
+    Route::put('/perbarui/{id}', [ProductController::class, 'perbarui']);
+    Route::delete('/hapus/{id}', [ProductController::class, 'hapuskan']);
+
 });
 
 Route::prefix('suppliers')->group(function () {

@@ -33,7 +33,7 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         if (!$product) return response()->json(['message' => 'Product not found'], 404);
-        return $product;
+        return response()->json($product);
     }
 
     public function create(): View
@@ -62,6 +62,45 @@ class ProductController extends Controller
         }
 
         return redirect()->route('products.index')->with('error', 'Gagal mengunggah gambar.');
+    }
+
+    // 2. CREATE (Menerima data dari NodeJS + Gambar)
+    public function tambah(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'price' => 'required',
+            'stock' => 'required',
+        ]);
+
+        // Default nama gambar jika user tidak upload
+        $imageName = 'default.png';
+
+        // CEK GAMBAR DARI NODEJS
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            // Simpan ke folder: storage/app/public/image
+            $image->store('image', 'public');
+            // Ambil nama file acak (contoh: jd8s7ds8.jpg)
+            $imageName = $image->hashName();
+        }
+
+        // Mapping Data:
+        // NodeJS kirim 'name' -> Kita simpan ke 'title'
+        // NodeJS tidak kirim 'id_supplier' dll -> Kita kasih nilai default 1
+        $product = Product::create([
+            'title' => $request->name,
+            'description' => $request->description ?? '-',
+            'price' => $request->price,
+            'stock' => $request->stock,
+            
+            // Simpan nama file gambar yang benar
+            'image' => $imageName,
+            'id_supplier' => 1,          // Pastikan ada supplier id 1 di DB
+            'product_category_id' => 1   // Pastikan ada kategori id 1 di DB
+        ]);
+
+        return response()->json($product, 201);
     }
 
     public function show(string $id): View
@@ -117,6 +156,43 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('success', 'Data berhasil diubah!');
     }
 
+    // 4. UPDATE (Edit Data + Ganti Gambar)
+    public function perbarui(Request $request, $id)
+    {
+        $product = Product::find($id);
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
+
+        // Siapkan data yang mau diupdate
+        $updateData = [
+            'title' => $request->name, // Update title pakai data name dari NodeJS
+            'description' => $request->description,
+            'price' => $request->price,
+            'stock' => $request->stock,
+        ];
+
+        // CEK JIKA ADA GAMBAR BARU DIUPLOAD
+        if ($request->hasFile('image')) {
+            // 1. Hapus gambar lama (kecuali default.png)
+            if ($product->image != 'default.png') {
+                Storage::disk('public')->delete('image/' . $product->image);
+            }
+
+            // 2. Simpan gambar baru
+            $image = $request->file('image');
+            $image->store('image', 'public');
+            
+            // 3. Masukkan nama gambar baru ke data update
+            $updateData['image'] = $image->hashName();
+        }
+
+        // Lakukan update ke database
+        $product->update($updateData);
+
+        return response()->json($product);
+    }
+
     public function destroy($id): RedirectResponse
     {
         $productModel = new Product;
@@ -128,5 +204,22 @@ class ProductController extends Controller
             $product->delete();
         });
         return redirect()->route('products.index')->with('success', 'Data berhasil dihapus!');
+    }
+
+    // 5. DELETE (Hapus Data + File Gambar)
+    public function hapuskan($id)
+    {
+        $product = Product::find($id);
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
+        
+        // Hapus file fisik gambar di folder storage (kecuali default)
+        if ($product->image != 'default.png') {
+            Storage::disk('public')->delete('image/' . $product->image);
+        }
+
+        $product->delete();
+        return response()->json(['message' => 'Product deleted']);
     }
 }
